@@ -142,25 +142,34 @@ const TOTPCard: React.FC<TOTPCardProps> = ({ entry, currentTime }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-200 hover:shadow-md">
-      <div className="p-4">
-        <div className="flex justify-between items-start mb-3">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setShowIconSelector(true)}
-              className={`w-10 h-10 flex items-center justify-center text-gray-700 dark:text-gray-300 rounded-full transition-colors relative overflow-hidden ${entry.icon && entry.icon.startsWith('data:image') ? '' : 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600'}`}
-            >
-              {entry.icon ? (
-                entry.icon.startsWith('data:image') ? (
-                  <img src={entry.icon} alt="Custom icon" className="w-full h-full object-cover object-center absolute inset-0" />
-                ) : (
-                  <span className="text-lg">{entry.icon}</span>
-                )
+    <div className="group relative bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-xl border-l-4 border-blue-500 shadow-sm hover:shadow-lg border border-gray-200/50 dark:border-gray-800/50 transition-all duration-300 hover:border-l-blue-600 dark:hover:border-l-blue-400">
+      <div className="p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+        {/* Icon Section */}
+        <div className="flex-shrink-0">
+          <button
+            onClick={() => setShowIconSelector(true)}
+            className={`w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center text-gray-700 dark:text-gray-300 rounded-xl transition-all duration-200 relative overflow-hidden hover:scale-105 ${
+              entry.icon && entry.icon.startsWith('data:image') 
+                ? 'ring-2 ring-gray-200 dark:ring-gray-700' 
+                : 'bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 hover:from-gray-200 hover:to-gray-300 dark:hover:from-gray-700 dark:hover:to-gray-600'
+            }`}
+          >
+            {entry.icon ? (
+              entry.icon.startsWith('data:image') ? (
+                <img src={entry.icon} alt="Custom icon" className="w-full h-full object-cover object-center" />
               ) : (
-                <Icons className="w-5 h-5" />
-              )}
-            </button>
+                <span className="text-xl sm:text-2xl">{entry.icon}</span>
+              )
+            ) : (
+              <Icons className="w-7 h-7 sm:w-8 sm:h-8" />
+            )}
+          </button>
+        </div>
 
+        {/* Content Section */}
+        <div className="flex-1 min-w-0 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 w-full">
+          {/* Title Section */}
+          <div className="flex-1 min-w-0 w-full sm:w-auto">
             {isEditing ? (
               <input
                 type="text"
@@ -169,59 +178,68 @@ const TOTPCard: React.FC<TOTPCardProps> = ({ entry, currentTime }) => {
                 onBlur={handleSave}
                 onKeyDown={handleKeyDown}
                 autoFocus
-                className="font-medium text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full font-semibold text-base sm:text-lg text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 px-3 py-2 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
               />
             ) : (
-              <h3 className="font-medium text-gray-900 dark:text-white truncate max-w-[180px]">
+              <h3 className="font-semibold text-base sm:text-lg text-gray-900 dark:text-white break-words sm:truncate">
                 {entry.name}
               </h3>
             )}
+            <div className="mt-2 flex items-center gap-3 sm:gap-4">
+              <div className="h-2 sm:h-2.5 w-24 sm:w-32 bg-gray-200/80 dark:bg-gray-700/80 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 transition-all duration-1000 ease-linear rounded-full"
+                  style={{ width: `${(timeRemaining / (entry.period || 30)) * 100}%` }}
+                ></div>
+              </div>
+              <p className="text-xs text-gray-500 dark:text-gray-400 font-medium whitespace-nowrap">
+                {timeRemaining}s
+              </p>
+            </div>
           </div>
 
-          <div className="flex space-x-1 mr-6"> {/* Ajout de marge à droite pour faire de la place au bouton de dossier */}
-            <button
-              onClick={() => setIsEditing(true)}
-              className="p-1 text-gray-400 hover:text-blue-500 dark:text-gray-500 dark:hover:text-blue-400 transition-colors"
-              title="Edit"
-            >
-              <Edit size={16} />
-            </button>
-            <button
-              ref={deleteButtonRef}
-              onClick={confirmDelete}
-              className={`p-1 transition-colors ${showDeleteConfirm ? 'text-red-500 dark:text-red-400' : 'text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400'}`}
-              title="Delete"
-            >
-              <Trash2 size={16} />
-            </button>
-          </div>
-        </div>
-
-        <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 mt-3">
-          <div className="flex items-center justify-between">
-            <p className="font-mono text-2xl tracking-wider text-gray-900 dark:text-white">
-              {formattedCode}
-            </p>
+          {/* Code Section */}
+          <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0 w-full sm:w-auto justify-between sm:justify-start">
+            <div className="bg-gradient-to-br from-gray-50 to-gray-100/50 dark:from-gray-800/50 dark:to-gray-900/50 rounded-xl px-4 sm:px-6 py-2.5 sm:py-3 border border-gray-200/50 dark:border-gray-700/50">
+              <p className="font-mono text-xl sm:text-2xl font-bold tracking-widest text-gray-900 dark:text-white select-all">
+                {formattedCode}
+              </p>
+            </div>
             <button
               onClick={copyToClipboard}
-              className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+              className={`p-2.5 sm:p-3 rounded-xl transition-all duration-200 flex-shrink-0 ${
+                copied 
+                  ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' 
+                  : 'text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+              }`}
               title="Copy to clipboard"
             >
               {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
             </button>
           </div>
-        </div>
 
-        <div className="mt-3">
-          <div className="h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-blue-600 transition-all duration-1000 ease-linear"
-              style={{ width: `${(timeRemaining / (entry.period || 30)) * 100}%` }}
-            ></div>
+          {/* Actions Section */}
+          <div className="flex items-center gap-1 flex-shrink-0 sm:ml-auto">
+            <button
+              onClick={() => setIsEditing(true)}
+              className="p-2 sm:p-2.5 text-gray-400 hover:text-blue-600 dark:text-gray-500 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all duration-150"
+              title="Edit"
+            >
+              <Edit size={16} className="sm:w-[18px] sm:h-[18px]" />
+            </button>
+            <button
+              ref={deleteButtonRef}
+              onClick={confirmDelete}
+              className={`p-2 sm:p-2.5 rounded-lg transition-all duration-150 ${
+                showDeleteConfirm 
+                  ? 'text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-900/20' 
+                  : 'text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20'
+              }`}
+              title="Delete"
+            >
+              <Trash2 size={16} className="sm:w-[18px] sm:h-[18px]" />
+            </button>
           </div>
-          <p className="text-xs text-right mt-1 text-gray-500 dark:text-gray-400">
-            Refreshes in {timeRemaining}s
-          </p>
         </div>
       </div>
 
@@ -238,34 +256,34 @@ const TOTPCard: React.FC<TOTPCardProps> = ({ entry, currentTime }) => {
       {showDeleteConfirm && (
         <>
           {/* Overlay avec effet de flou */}
-          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"></div>
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 animate-in fade-in duration-200"></div>
           
           {/* Modal de confirmation */}
           <div 
             ref={deleteConfirmRef}
-            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-50 w-[90%] max-w-[400px]"
+            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl p-6 rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-800/50 z-50 w-[90%] max-w-[400px] animate-in zoom-in-95 duration-200"
           >
-            <div className="flex items-center gap-3 mb-3">
-              <div className="bg-red-100 dark:bg-red-900/30 p-2 rounded-full">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="bg-red-100 dark:bg-red-900/30 p-3 rounded-xl">
                 <AlertTriangle className="w-6 h-6 text-red-600 dark:text-red-400" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white">Confirm deletion</h3>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white">Confirm deletion</h3>
             </div>
             
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
-              Are you sure you want to delete <span className="font-medium">{entry.name}</span>? This action cannot be undone.
+            <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+              Are you sure you want to delete <span className="font-semibold text-gray-900 dark:text-white">{entry.name}</span>? This action cannot be undone.
             </p>
             
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-3">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                className="px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-xl transition-all duration-150"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDelete}
-                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 dark:hover:bg-red-500 transition-colors"
+                className="px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 rounded-xl transition-all duration-150 shadow-lg shadow-red-500/25"
               >
                 Delete
               </button>

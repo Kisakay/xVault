@@ -147,8 +147,12 @@ const FolderItem: React.FC<FolderItemProps> = ({ folder, isActive, onSelect, lev
   // Rendu du composant
   return (
     <>
-      <div className={`mb-1 rounded-md ${isActive ? 'bg-gray-100 dark:bg-gray-700' : 'hover:bg-gray-50 dark:hover:bg-gray-800'}`}>
-        <div className="flex items-center p-2 group" style={{ paddingLeft: `${level * 16 + 8}px` }}>
+      <div className={`mb-1 rounded-xl transition-all duration-150 ${
+        isActive 
+          ? 'bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 border border-blue-200/50 dark:border-blue-800/50' 
+          : 'hover:bg-gray-100/80 dark:hover:bg-gray-800/80'
+      }`}>
+        <div className="flex items-center p-2.5 group" style={{ paddingLeft: `${level * 16 + 8}px` }}>
           <button 
             onClick={toggleExpanded}
             className="mr-1 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
@@ -211,7 +215,11 @@ const FolderItem: React.FC<FolderItemProps> = ({ folder, isActive, onSelect, lev
                 >
                   {folder.icon || '📁'}
                 </div>
-                <span className="text-gray-800 dark:text-gray-200 font-medium">
+                <span className={`font-medium ${
+                  isActive 
+                    ? 'text-blue-700 dark:text-blue-300' 
+                    : 'text-gray-700 dark:text-gray-300'
+                }`}>
                   {folder.name}
                 </span>
               </div>
@@ -264,7 +272,7 @@ const FolderItem: React.FC<FolderItemProps> = ({ folder, isActive, onSelect, lev
         </div>
 
         {showColorPicker && (
-        <div ref={colorPickerRef} className="p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-md mb-2 ml-6">
+        <div ref={colorPickerRef} className="p-4 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border border-gray-200/50 dark:border-gray-800/50 rounded-xl shadow-xl mb-2 ml-6">
             <div className="mb-2">
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Color</p>
               <div className="flex flex-wrap gap-2">
@@ -296,10 +304,10 @@ const FolderItem: React.FC<FolderItemProps> = ({ folder, isActive, onSelect, lev
               </div>
             </div>
             
-            <div className="mt-2 flex justify-end">
+            <div className="mt-3 flex justify-end">
               <button
                 onClick={handleSave}
-                className="px-3 py-1 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600"
+                className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl text-sm font-medium transition-all duration-150 shadow-lg shadow-blue-500/25"
               >
                 Apply changes
               </button>
@@ -308,15 +316,15 @@ const FolderItem: React.FC<FolderItemProps> = ({ folder, isActive, onSelect, lev
         )}
         
         {showMoveOptions && (
-          <div ref={moveOptionsRef} className="p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-md mb-2 ml-6">
+          <div ref={moveOptionsRef} className="p-4 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border border-gray-200/50 dark:border-gray-800/50 rounded-xl shadow-xl mb-2 ml-6">
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Move to folder</p>
             
             <div className="max-h-48 overflow-y-auto">
               <div 
-                className="p-2 flex items-center rounded-md cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="p-3 flex items-center rounded-lg cursor-pointer hover:bg-gray-100/80 dark:hover:bg-gray-800/80 transition-colors duration-150"
                 onClick={() => handleMoveFolder(null)}
               >
-                <span className="text-gray-800 dark:text-gray-200">Root (no folder)</span>
+                <span className="text-gray-700 dark:text-gray-300 font-medium">Root (no folder)</span>
               </div>
               
               {allFolders
@@ -324,7 +332,7 @@ const FolderItem: React.FC<FolderItemProps> = ({ folder, isActive, onSelect, lev
                 .map(f => (
                   <div 
                     key={f.id}
-                    className="p-2 flex items-center rounded-md cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+                    className="p-3 flex items-center rounded-lg cursor-pointer hover:bg-gray-100/80 dark:hover:bg-gray-800/80 transition-colors duration-150"
                     onClick={() => handleMoveFolder(f.id)}
                   >
                     <div 
@@ -337,7 +345,7 @@ const FolderItem: React.FC<FolderItemProps> = ({ folder, isActive, onSelect, lev
                     >
                       {f.icon || '📁'}
                     </div>
-                    <span className="text-gray-800 dark:text-gray-200">{f.name}</span>
+                    <span className="text-gray-700 dark:text-gray-300 font-medium">{f.name}</span>
                   </div>
                 ))
               }
@@ -366,34 +374,34 @@ const FolderItem: React.FC<FolderItemProps> = ({ folder, isActive, onSelect, lev
       {showDeleteConfirm && (
         <>
           {/* Overlay avec effet de flou */}
-          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"></div>
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 animate-in fade-in duration-200"></div>
           
           {/* Modal de confirmation */}
           <div 
             ref={deleteConfirmRef}
-            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-50 w-[90%] max-w-[400px]"
+            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl p-6 rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-800/50 z-50 w-[90%] max-w-[400px] animate-in zoom-in-95 duration-200"
           >
-            <div className="flex items-center gap-3 mb-3">
-              <div className="bg-red-100 dark:bg-red-900/30 p-2 rounded-full">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="bg-red-100 dark:bg-red-900/30 p-3 rounded-xl">
                 <AlertTriangle className="w-6 h-6 text-red-600 dark:text-red-400" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white">Confirm deletion</h3>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white">Confirm deletion</h3>
             </div>
             
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
-              Are you sure you want to delete the folder <span className="font-medium">"{folder.name}"</span>? The entries will be moved to the root.
+            <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+              Are you sure you want to delete the folder <span className="font-semibold text-gray-900 dark:text-white">"{folder.name}"</span>? The entries will be moved to the root.
             </p>
             
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-3">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                className="px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-xl transition-all duration-150"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDelete}
-                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 dark:hover:bg-red-500 transition-colors"
+                className="px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 rounded-xl transition-all duration-150 shadow-lg shadow-red-500/25"
               >
                 Delete
               </button>

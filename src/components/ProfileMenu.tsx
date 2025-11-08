@@ -129,44 +129,44 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md overflow-hidden">
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Profile Settings</h2>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+      <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-200/50 dark:border-gray-800/50 animate-in zoom-in-95 duration-200">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200/50 dark:border-gray-800/50">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Profile Settings</h2>
           <button 
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-150"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
         
-        <div className="flex border-b border-gray-200 dark:border-gray-700">
+        <div className="flex border-b border-gray-200/50 dark:border-gray-800/50">
           <button
-            className={`flex-1 py-3 px-4 text-center font-medium border-b-2 min-w-[100px] ${
+            className={`flex-1 py-3 px-4 text-center font-medium border-b-2 min-w-[100px] transition-all duration-150 ${
               activeTab === 'general'
-                ? 'text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 border-transparent'
+                ? 'text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400 bg-blue-50/50 dark:bg-blue-900/20'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 border-transparent hover:bg-gray-50/50 dark:hover:bg-gray-800/50'
             }`}
             onClick={() => setActiveTab('general')}
           >
             General
           </button>
           <button
-            className={`flex-1 py-3 px-4 text-center font-medium border-b-2 min-w-[100px] ${
+            className={`flex-1 py-3 px-4 text-center font-medium border-b-2 min-w-[100px] transition-all duration-150 ${
               activeTab === 'security'
-                ? 'text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 border-transparent'
+                ? 'text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400 bg-blue-50/50 dark:bg-blue-900/20'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 border-transparent hover:bg-gray-50/50 dark:hover:bg-gray-800/50'
             }`}
             onClick={() => setActiveTab('security')}
           >
             Security
           </button>
           <button
-            className={`flex-1 py-3 px-4 text-center font-medium border-b-2 min-w-[100px] ${
+            className={`flex-1 py-3 px-4 text-center font-medium border-b-2 min-w-[100px] transition-all duration-150 ${
               activeTab === 'danger'
-                ? 'text-red-600 dark:text-red-400 border-red-600 dark:border-red-400'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 border-transparent'
+                ? 'text-red-600 dark:text-red-400 border-red-600 dark:border-red-400 bg-red-50/50 dark:bg-red-900/20'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 border-transparent hover:bg-gray-50/50 dark:hover:bg-gray-800/50'
             }`}
             onClick={() => setActiveTab('danger')}
           >
@@ -174,7 +174,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ isOpen, onClose }) => {
           </button>
         </div>
         
-        <div className="p-4">
+        <div className="p-6">
           {activeTab === 'general' && (
             <form onSubmit={handleProfileUpdate}>
               <div className="flex flex-col items-center mb-6">
@@ -223,16 +223,16 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ isOpen, onClose }) => {
               </div>
               
               {generalMessage && (
-                <div className={`mb-4 p-3 rounded-lg ${
+                <div className={`mb-4 p-4 rounded-xl border ${
                   generalMessage.type === 'success' 
-                    ? 'bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200' 
-                    : 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200'
+                    ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/30' 
+                    : 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-300 border-red-200 dark:border-red-800/30'
                 }`}>
-                  {generalMessage.text}
+                  <p className="font-medium">{generalMessage.text}</p>
                 </div>
               )}
               
-              <div className="mb-4">
+              <div className="mb-6">
                 <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                   Vault Name
                 </label>
@@ -241,7 +241,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ isOpen, onClose }) => {
                   id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all duration-200"
                   placeholder="Enter vault name"
                 />
               </div>
@@ -250,11 +250,11 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ isOpen, onClose }) => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/25 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? 'Saving...' : (
                     <>
-                      <Save className="h-4 w-4 mr-2" />
+                      <Save className="h-4 w-4" />
                       Save Changes
                     </>
                   )}
@@ -266,12 +266,12 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ isOpen, onClose }) => {
           {activeTab === 'security' && (
             <form onSubmit={handlePasswordChange}>
               {securityMessage && (
-                <div className={`mb-4 p-3 rounded-lg ${
+                <div className={`mb-4 p-4 rounded-xl border ${
                   securityMessage.type === 'success' 
-                    ? 'bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200' 
-                    : 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200'
+                    ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/30' 
+                    : 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-300 border-red-200 dark:border-red-800/30'
                 }`}>
-                  {securityMessage.text}
+                  <p className="font-medium">{securityMessage.text}</p>
                 </div>
               )}
               
@@ -284,7 +284,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ isOpen, onClose }) => {
                   id="currentPassword"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
-                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all duration-200"
                   placeholder="Enter current password"
                   required
                 />
@@ -299,11 +299,11 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ isOpen, onClose }) => {
                   id="newPassword"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all duration-200"
                   placeholder="Enter new password"
                   required
                 />
-                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
                   Password must be at least 6 characters long
                 </p>
               </div>
@@ -317,7 +317,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ isOpen, onClose }) => {
                   id="confirmPassword"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all duration-200"
                   placeholder="Confirm new password"
                   required
                 />
@@ -327,11 +327,11 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ isOpen, onClose }) => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/25 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? 'Changing...' : (
                     <>
-                      <Key className="h-4 w-4 mr-2" />
+                      <Key className="h-4 w-4" />
                       Change Password
                     </>
                   )}
@@ -343,16 +343,16 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ isOpen, onClose }) => {
           {activeTab === 'danger' && (
             <div>
               {dangerMessage && (
-                <div className={`mb-4 p-3 rounded-lg ${
+                <div className={`mb-4 p-4 rounded-xl border ${
                   dangerMessage.type === 'success' 
-                    ? 'bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200' 
-                    : 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200'
+                    ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/30' 
+                    : 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-300 border-red-200 dark:border-red-800/30'
                 }`}>
-                  {dangerMessage.text}
+                  <p className="font-medium">{dangerMessage.text}</p>
                 </div>
               )}
               
-              <div className="mb-6 p-4 border border-red-300 dark:border-red-700 rounded-lg bg-red-50 dark:bg-red-900/20">
+              <div className="mb-6 p-5 border border-red-200 dark:border-red-800/30 rounded-xl bg-red-50 dark:bg-red-900/20">
                 <div className="flex items-start">
                   <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400 mr-3 flex-shrink-0 mt-0.5" />
                   <div>
@@ -364,9 +364,9 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ isOpen, onClose }) => {
                     <button
                       type="button"
                       onClick={() => setShowDeleteConfirm(true)}
-                      className="flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+                      className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-xl transition-all duration-200 shadow-lg shadow-red-500/25 font-medium"
                     >
-                      <Trash2 className="h-4 w-4 mr-2" />
+                      <Trash2 className="h-4 w-4" />
                       Delete Account
                     </button>
                   </div>
@@ -375,19 +375,21 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ isOpen, onClose }) => {
               
               {/* Boîte de dialogue de confirmation */}
               {showDeleteConfirm && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md overflow-hidden">
-                    <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center">
-                      <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400 mr-2" />
-                      <h3 className="text-lg font-medium text-red-800 dark:text-red-300">Confirm Account Deletion</h3>
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4 animate-in fade-in duration-200">
+                  <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-200/50 dark:border-gray-800/50 animate-in zoom-in-95 duration-200">
+                    <div className="p-6 border-b border-gray-200/50 dark:border-gray-800/50 flex items-center gap-3">
+                      <div className="bg-red-100 dark:bg-red-900/30 p-2 rounded-xl">
+                        <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
+                      </div>
+                      <h3 className="text-lg font-bold text-red-800 dark:text-red-300">Confirm Account Deletion</h3>
                     </div>
                     
-                    <div className="p-4">
-                      <p className="mb-4 text-gray-700 dark:text-gray-300">
+                    <div className="p-6">
+                      <p className="mb-6 text-gray-700 dark:text-gray-300 leading-relaxed">
                         Please enter your password to confirm that you want to permanently delete your account.
                       </p>
                       
-                      <div className="mb-4">
+                      <div className="mb-6">
                         <label htmlFor="deletePassword" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                           Password
                         </label>
@@ -396,20 +398,20 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ isOpen, onClose }) => {
                           id="deletePassword"
                           value={deletePassword}
                           onChange={(e) => setDeletePassword(e.target.value)}
-                          className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                          className="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500/50 focus:border-red-500 dark:focus:border-red-500 transition-all duration-200"
                           placeholder="Enter your password"
                           required
                         />
                       </div>
                       
-                      <div className="flex justify-end space-x-3">
+                      <div className="flex justify-end gap-3">
                         <button
                           type="button"
                           onClick={() => {
                             setShowDeleteConfirm(false);
                             setDeletePassword('');
                           }}
-                          className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+                          className="px-4 py-2.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-150 font-medium"
                         >
                           Cancel
                         </button>
@@ -445,7 +447,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ isOpen, onClose }) => {
                             }
                           }}
                           disabled={isLoading || !deletePassword}
-                          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="px-4 py-2.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-xl transition-all duration-200 shadow-lg shadow-red-500/25 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {isLoading ? 'Deleting...' : 'Delete My Account'}
                         </button>

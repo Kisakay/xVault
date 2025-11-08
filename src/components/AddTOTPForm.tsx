@@ -111,14 +111,14 @@ const AddTOTPForm: React.FC<AddTOTPFormProps> = ({ onSuccess }) => {
       )}
       
       {error && (
-        <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/30 rounded-lg text-red-800 dark:text-red-300 flex items-start">
-          <AlertCircle className="w-5 h-5 mr-2 mt-0.5 flex-shrink-0" />
-          <p>{error}</p>
+        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/30 rounded-xl text-red-800 dark:text-red-300 flex items-start">
+          <AlertCircle className="w-5 h-5 mr-3 mt-0.5 flex-shrink-0" />
+          <p className="font-medium">{error}</p>
         </div>
       )}
 
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" htmlFor="account-name">
+      <div className="mb-5">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" htmlFor="account-name">
           Account Name
         </label>
         <input
@@ -127,53 +127,53 @@ const AddTOTPForm: React.FC<AddTOTPFormProps> = ({ onSuccess }) => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g., Google, GitHub, AWS"
-          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+          className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 dark:text-white transition-all duration-200"
           required
         />
       </div>
 
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" htmlFor="secret-key">
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" htmlFor="secret-key">
           Secret Key
         </label>
         <div className="relative">
-          <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400" />
+          <Key className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400" />
           <input
             id="secret-key"
             type="text"
             value={secret}
             onChange={(e) => setSecret(e.target.value)}
             placeholder="JBSWY3DPEHPK3PXP"
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+            className="w-full pl-12 pr-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 dark:text-white transition-all duration-200 font-mono"
             required
           />
         </div>
-        <div className="flex justify-between items-center mt-2">
+        <div className="flex justify-between items-center mt-3">
           <p className="text-sm text-gray-500 dark:text-gray-400">
             Enter the secret key provided by the service
           </p>
           <button
             type="button"
             onClick={() => setShowScanner(true)}
-            className="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg text-sm font-medium transition-all duration-150"
           >
-            <QrCode className="w-4 h-4 mr-1" />
-            Scan QR code
+            <QrCode className="w-4 h-4" />
+            Scan QR
           </button>
         </div>
       </div>
 
-      <div className="flex justify-end space-x-3">
+      <div className="flex justify-end gap-3">
         <button
           type="button"
           onClick={onSuccess}
-          className="px-4 py-2 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          className="px-4 py-2.5 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-150 font-medium"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors shadow-sm"
+          className="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 font-medium"
         >
           Add Account
         </button>

@@ -159,36 +159,37 @@ const VaultActions: React.FC<VaultActionsProps> = ({ className }) => {
       <div className="relative">
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="p-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+          className="p-2.5 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white rounded-xl hover:bg-gray-100/80 dark:hover:bg-gray-800/80 transition-all duration-200"
         >
           <MoreVertical className="w-5 h-5" />
         </button>
 
         {menuOpen && (
-          <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-10">
-            <div className="py-1" role="menu" aria-orientation="vertical">
+          <div className="absolute right-0 mt-2 w-56 rounded-2xl shadow-xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border border-gray-200/50 dark:border-gray-800/50 z-10 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="py-1.5" role="menu" aria-orientation="vertical">
               <button
                 onClick={handleExportClick}
-                className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="flex items-center w-full px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100/80 dark:hover:bg-gray-800/80 transition-colors duration-150"
                 role="menuitem"
               >
-                <Download className="w-4 h-4 mr-2" />
+                <Download className="w-4 h-4 mr-3" />
                 Export Vault
               </button>
               <button
                 onClick={handleImportClick}
-                className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="flex items-center w-full px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100/80 dark:hover:bg-gray-800/80 transition-colors duration-150"
                 role="menuitem"
               >
-                <Upload className="w-4 h-4 mr-2" />
+                <Upload className="w-4 h-4 mr-3" />
                 Import Vault
               </button>
+              <div className="border-t border-gray-100 dark:border-gray-800 my-1"></div>
               <button
                 onClick={lock}
-                className="flex items-center w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="flex items-center w-full px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50/80 dark:hover:bg-red-900/20 transition-colors duration-150"
                 role="menuitem"
               >
-                <LogOut className="w-4 h-4 mr-2" />
+                <LogOut className="w-4 h-4 mr-3" />
                 Lock Vault
               </button>
             </div>
@@ -198,17 +199,19 @@ const VaultActions: React.FC<VaultActionsProps> = ({ className }) => {
 
       {/* Export Modal */}
       {isExporting && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Export Vault</h3>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
+          <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-2xl shadow-2xl max-w-md w-full border border-gray-200/50 dark:border-gray-800/50 animate-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-gray-200/50 dark:border-gray-800/50">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white">Export Vault</h3>
+            </div>
 
-            <form onSubmit={handleExport}>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
+            <form onSubmit={handleExport} className="p-6">
+              <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
                 Please enter your vault password to export your data. The exported file will be encrypted with this password.
               </p>
 
-              <div className="mb-4">
-                <label htmlFor="export-password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <div className="mb-6">
+                <label htmlFor="export-password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Vault Password
                 </label>
                 <input
@@ -216,37 +219,38 @@ const VaultActions: React.FC<VaultActionsProps> = ({ className }) => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 dark:text-white transition-all duration-200"
                   placeholder="Enter your vault password"
                   required
                 />
               </div>
 
               {statusMessage && (
-                <div className={`p-3 mb-4 rounded-md flex items-center ${statusMessage.type === 'success'
-                    ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400'
-                    : 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400'
+                <div className={`p-4 mb-6 rounded-xl flex items-center ${
+                  statusMessage.type === 'success'
+                    ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/30'
+                    : 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-800/30'
                   }`}>
                   {statusMessage.type === 'success'
-                    ? <CheckCircle className="w-5 h-5 mr-2" />
-                    : <AlertCircle className="w-5 h-5 mr-2" />
+                    ? <CheckCircle className="w-5 h-5 mr-3 flex-shrink-0" />
+                    : <AlertCircle className="w-5 h-5 mr-3 flex-shrink-0" />
                   }
-                  <span>{statusMessage.text}</span>
+                  <span className="font-medium">{statusMessage.text}</span>
                 </div>
               )}
 
-              <div className="flex justify-end gap-2 mt-4">
+              <div className="flex justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setIsExporting(false)}
-                  className="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-md transition-colors"
+                  className="px-4 py-2.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl transition-all duration-150 font-medium"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={!password}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl transition-all duration-150 shadow-lg shadow-blue-500/25 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Export
                 </button>
@@ -258,20 +262,22 @@ const VaultActions: React.FC<VaultActionsProps> = ({ className }) => {
 
       {/* Import Modal */}
       {isImporting && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Import Vault</h3>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
+          <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-2xl shadow-2xl max-w-md w-full border border-gray-200/50 dark:border-gray-800/50 animate-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-gray-200/50 dark:border-gray-800/50">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white">Import Vault</h3>
+            </div>
 
-            <form onSubmit={handleImport}>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
+            <form onSubmit={handleImport} className="p-6">
+              <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
                 Upload a previously exported xVault vault file. You'll need the same password that was used to export the file.
               </p>
 
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Vault File
                 </label>
-                <div className="flex items-center">
+                <div className="flex items-center gap-2">
                   <input
                     type="file"
                     accept=".json"
@@ -281,18 +287,18 @@ const VaultActions: React.FC<VaultActionsProps> = ({ className }) => {
                   />
                   <label
                     htmlFor="vault-file-input"
-                    className="cursor-pointer px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-md transition-colors flex-shrink-0"
+                    className="cursor-pointer px-4 py-2.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl transition-all duration-150 font-medium flex-shrink-0"
                   >
                     Choose File
                   </label>
-                  <span className="ml-2 text-gray-600 dark:text-gray-400 truncate">
+                  <span className="flex-1 text-sm text-gray-600 dark:text-gray-400 truncate">
                     {importFile ? importFile.name : 'No file selected'}
                   </span>
                 </div>
               </div>
 
-              <div className="mb-4">
-                <label htmlFor="import-password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <div className="mb-6">
+                <label htmlFor="import-password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Vault Password
                 </label>
                 <input
@@ -300,37 +306,38 @@ const VaultActions: React.FC<VaultActionsProps> = ({ className }) => {
                   type="password"
                   value={importPassword}
                   onChange={(e) => setImportPassword(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 dark:text-white transition-all duration-200"
                   placeholder="Enter the password for this vault file"
                   required
                 />
               </div>
 
               {statusMessage && (
-                <div className={`p-3 mb-4 rounded-md flex items-center ${statusMessage.type === 'success'
-                    ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400'
-                    : 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400'
+                <div className={`p-4 mb-6 rounded-xl flex items-center ${
+                  statusMessage.type === 'success'
+                    ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/30'
+                    : 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-800/30'
                   }`}>
                   {statusMessage.type === 'success'
-                    ? <CheckCircle className="w-5 h-5 mr-2" />
-                    : <AlertCircle className="w-5 h-5 mr-2" />
+                    ? <CheckCircle className="w-5 h-5 mr-3 flex-shrink-0" />
+                    : <AlertCircle className="w-5 h-5 mr-3 flex-shrink-0" />
                   }
-                  <span>{statusMessage.text}</span>
+                  <span className="font-medium">{statusMessage.text}</span>
                 </div>
               )}
 
-              <div className="flex justify-end gap-2 mt-4">
+              <div className="flex justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setIsImporting(false)}
-                  className="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-md transition-colors"
+                  className="px-4 py-2.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl transition-all duration-150 font-medium"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={!importFile || !importPassword}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl transition-all duration-150 shadow-lg shadow-blue-500/25 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Import
                 </button>

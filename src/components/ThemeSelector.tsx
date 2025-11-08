@@ -45,32 +45,34 @@ const ThemeSelector: React.FC = () => {
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+        className="p-2.5 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white rounded-xl hover:bg-gray-100/80 dark:hover:bg-gray-800/80 transition-all duration-200 group"
         aria-label="Toggle theme"
         title="Change theme"
       >
-        {getThemeIcon()}
+        <div className="group-hover:scale-110 transition-transform duration-200">
+          {getThemeIcon()}
+        </div>
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-10 overflow-hidden transition-all duration-200">
-          <div className="py-1" role="menu" aria-orientation="vertical">
+        <div className="absolute right-0 mt-2 w-48 rounded-2xl shadow-xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border border-gray-200/50 dark:border-gray-800/50 z-10 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="py-1.5" role="menu" aria-orientation="vertical">
             <button
               onClick={() => {
                 setTheme('light');
                 setIsOpen(false);
               }}
-              className={`flex items-center w-full px-4 py-2 text-sm transition-colors duration-200 ${
+              className={`flex items-center w-full px-4 py-2.5 text-sm transition-all duration-150 ${
                 theme === 'light'
-                  ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
-                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  ? 'text-blue-600 dark:text-blue-400 bg-blue-50/80 dark:bg-blue-900/30 font-medium'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/80 dark:hover:bg-gray-800/80'
               }`}
               role="menuitem"
             >
-              <Sun className="w-4 h-4 mr-2" />
+              <Sun className="w-4 h-4 mr-3" />
               Light
               {theme === 'light' && (
-                <span className="ml-auto text-blue-600 dark:text-blue-400">✓</span>
+                <span className="ml-auto text-blue-600 dark:text-blue-400 font-bold">✓</span>
               )}
             </button>
             
@@ -79,17 +81,17 @@ const ThemeSelector: React.FC = () => {
                 setTheme('dark');
                 setIsOpen(false);
               }}
-              className={`flex items-center w-full px-4 py-2 text-sm transition-colors duration-200 ${
+              className={`flex items-center w-full px-4 py-2.5 text-sm transition-all duration-150 ${
                 theme === 'dark'
-                  ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
-                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  ? 'text-blue-600 dark:text-blue-400 bg-blue-50/80 dark:bg-blue-900/30 font-medium'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/80 dark:hover:bg-gray-800/80'
               }`}
               role="menuitem"
             >
-              <Moon className="w-4 h-4 mr-2" />
+              <Moon className="w-4 h-4 mr-3" />
               Dark
               {theme === 'dark' && (
-                <span className="ml-auto text-blue-600 dark:text-blue-400">✓</span>
+                <span className="ml-auto text-blue-600 dark:text-blue-400 font-bold">✓</span>
               )}
             </button>
             
@@ -98,17 +100,17 @@ const ThemeSelector: React.FC = () => {
                 setTheme('system');
                 setIsOpen(false);
               }}
-              className={`flex items-center w-full px-4 py-2 text-sm transition-colors duration-200 ${
+              className={`flex items-center w-full px-4 py-2.5 text-sm transition-all duration-150 ${
                 theme === 'system'
-                  ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
-                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  ? 'text-blue-600 dark:text-blue-400 bg-blue-50/80 dark:bg-blue-900/30 font-medium'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/80 dark:hover:bg-gray-800/80'
               }`}
               role="menuitem"
             >
-              <Monitor className="w-4 h-4 mr-2" />
+              <Monitor className="w-4 h-4 mr-3" />
               System
               {theme === 'system' && (
-                <span className="ml-auto text-blue-600 dark:text-blue-400">✓</span>
+                <span className="ml-auto text-blue-600 dark:text-blue-400 font-bold">✓</span>
               )}
             </button>
           </div>
