@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { generateTOTP, getTimeRemaining } from '../utils/totp';
 import { TOTPEntry } from '../types';
 import { useAuth } from '../context/AuthContext';
@@ -141,8 +142,9 @@ const TOTPCard: React.FC<TOTPCardProps> = ({ entry, currentTime }) => {
     setShowIconSelector(false);
   };
 
+  const rootHoverClass = showIconSelector || showDeleteConfirm ? '' : 'hover:shadow-lg hover:-translate-y-1 hover:border-l-blue-600 dark:hover:border-l-blue-400';
   return (
-    <div className="group relative bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-xl border-l-4 border-blue-500 shadow-sm hover:shadow-lg border border-gray-200/50 dark:border-gray-800/50 transition-all duration-300 hover:border-l-blue-600 dark:hover:border-l-blue-400">
+    <div className={`group relative bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-xl border-l-4 border-blue-500 shadow-sm border border-gray-200/50 dark:border-gray-800/50 transition-all duration-300 ${rootHoverClass}`}>
       <div className="p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
         {/* Icon Section */}
         <div className="flex-shrink-0">
@@ -243,25 +245,24 @@ const TOTPCard: React.FC<TOTPCardProps> = ({ entry, currentTime }) => {
         </div>
       </div>
 
-      {showIconSelector && (
-        <div className="z-50">
-          <IconSelector
-            onSelect={changeIcon}
-            onClose={() => setShowIconSelector(false)}
-          />
-        </div>
+      {showIconSelector && createPortal(
+        <IconSelector
+          onSelect={changeIcon}
+          onClose={() => setShowIconSelector(false)}
+        />,
+        document.body
       )}
       
       {/* Menu de confirmation de suppression */}
-      {showDeleteConfirm && (
+      {showDeleteConfirm && createPortal(
         <>
           {/* Overlay avec effet de flou */}
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 animate-in fade-in duration-200"></div>
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9998] animate-in fade-in duration-200"></div>
           
           {/* Modal de confirmation */}
           <div 
             ref={deleteConfirmRef}
-            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl p-6 rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-800/50 z-50 w-[90%] max-w-[400px] animate-in zoom-in-95 duration-200"
+            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl p-6 rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-800/50 z-[9999] w-[90%] max-w-[400px] animate-in zoom-in-95 duration-200"
           >
             <div className="flex items-center gap-3 mb-4">
               <div className="bg-red-100 dark:bg-red-900/30 p-3 rounded-xl">
@@ -289,7 +290,8 @@ const TOTPCard: React.FC<TOTPCardProps> = ({ entry, currentTime }) => {
               </button>
             </div>
           </div>
-        </>
+        </>,
+        document.body
       )}
     </div>
   );
