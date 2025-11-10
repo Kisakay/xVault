@@ -1,13 +1,14 @@
-import express from 'express';
-import fs from 'fs';
-import path from 'path';
-import cors from 'cors';
-import bodyParser from 'body-parser';
-import CryptoJS from 'crypto-js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import express from 'express';
+import path from 'path';
+import cors from 'cors';
+
 import session from 'express-session';
+import bodyParser from 'body-parser';
 import { v4 as uuidv4 } from 'uuid';
+
+import config from "../config.json" with { type: 'json' };
 
 // Import SQLite database functions
 import {
@@ -25,24 +26,13 @@ import {
 const handleApiError = (error, res, customMessage = 'Server error') => {
   // Log the actual error for server-side debugging
   console.error(customMessage, error);
-  
+
   // Only return a generic message to the client
   res.status(500).json({ error: customMessage });
 };
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
-// Load runtime configuration
-const configPath = path.join(__dirname, '../config.json');
-if (!fs.existsSync(configPath)) {
-  console.error('config.json not found at', configPath);
-  process.exit(1);
-}
-
-const configRaw = fs.readFileSync(configPath, 'utf-8');
-const config = JSON.parse(configRaw);
-config.SERVER_PORT = Number(config.SERVER_PORT);
 
 const app = express();
 const PORT = config.SERVER_PORT;
@@ -385,7 +375,7 @@ app.post('/api/vault/import', requireAuth, async (req, res) => {
       if (importData.format !== 'xVault-V2') {
         return res.status(400).json({ error: 'Unsupported vault format. Only xVault-V2 format is supported.' });
       }
-      
+
       // Parse the JSON string data
       const vaultData = JSON.parse(importData.data);
 
@@ -438,7 +428,7 @@ const server = app.listen(PORT, config.SERVER_HOST, () => {
 // HTTP server error handling
 server.on('error', (error) => {
   console.error('HTTP SERVER ERROR:', error);
-  
+
   if (error.code === 'EADDRINUSE') {
     console.log(`Port ${PORT} is already in use. Attempting to restart in 10 seconds...`);
     setTimeout(() => {
