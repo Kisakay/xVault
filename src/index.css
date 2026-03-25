@@ -1,6 +1,9 @@
 :root {
   color-scheme: dark;
   font-family: 'IBM Plex Sans', 'Avenir Next', 'Segoe UI', sans-serif;
+  --pointer-x: 50vw;
+  --pointer-y: 50vh;
+  --pointer-glow-opacity: 0;
   --bg: #081118;
   --bg-elevated: rgba(13, 27, 37, 0.82);
   --surface: rgba(15, 28, 38, 0.88);
@@ -56,6 +59,18 @@ body::before {
     linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
   background-size: 80px 80px;
   mask-image: radial-gradient(circle at center, black 45%, transparent 100%);
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--pointer-glow-opacity);
+  background:
+    radial-gradient(circle 220px at var(--pointer-x) var(--pointer-y), rgba(98, 215, 187, 0.16), transparent 62%),
+    radial-gradient(circle 360px at var(--pointer-x) var(--pointer-y), rgba(139, 199, 255, 0.1), transparent 72%);
+  transition: opacity 180ms ease;
 }
 
 button,
@@ -116,6 +131,8 @@ a {
 }
 
 .card {
+  position: relative;
+  overflow: hidden;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.018)),
     var(--surface);
@@ -123,6 +140,42 @@ a {
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow);
   backdrop-filter: blur(18px);
+  transition:
+    border-color 180ms ease,
+    box-shadow 220ms ease,
+    transform 180ms ease;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--card-glow-opacity, 0);
+  background:
+    radial-gradient(circle 160px at var(--card-glow-x, 50%) var(--card-glow-y, 50%), rgba(139, 199, 255, 0.16), transparent 62%),
+    radial-gradient(circle 240px at var(--card-glow-x, 50%) var(--card-glow-y, 50%), rgba(98, 215, 187, 0.1), transparent 72%);
+  transition: opacity 180ms ease;
+}
+
+.card[data-glow-active='true'] {
+  border-color: rgba(139, 199, 255, 0.22);
+  box-shadow:
+    0 0 0 1px rgba(139, 199, 255, 0.06),
+    0 30px 90px rgba(0, 0, 0, 0.32),
+    0 18px 36px rgba(98, 215, 187, 0.08);
+}
+
+.card > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media (hover: none), (pointer: coarse) {
+  body::after,
+  .card::before {
+    display: none;
+  }
 }
 
 .boot,
