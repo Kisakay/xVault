@@ -924,11 +924,26 @@ a {
 
 .otp-card__identity {
   flex: 1;
+  min-width: 0;
 }
 
 .otp-card__identity h3 {
   margin: 0;
   font-size: 1.15rem;
+}
+
+.otp-card__title,
+.otp-card__subtitle {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.otp-card__header .badge,
+.otp-card__header .avatar {
+  flex-shrink: 0;
 }
 
 .otp-card__body {

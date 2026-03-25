@@ -16,6 +16,9 @@ const escapeHtml = (value: string): string =>
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#39;');
 
+const truncateLabel = (value: string, maxLength = 25): string =>
+  value.length > maxLength ? `${value.slice(0, Math.max(0, maxLength - 3)).trimEnd()}...` : value;
+
 const formatCode = (code: string): string => {
   if (!code || code === '------') {
     return '--- ---';
@@ -302,6 +305,8 @@ const renderEntryCard = (entry: TOTPEntry, state: AppState, foldersById: Map<str
   const otp = state.otpById[entry.id];
   const folder = entry.folderId ? foldersById.get(entry.folderId) : null;
   const { title, subtitle } = splitEntryName(entry.name);
+  const truncatedTitle = truncateLabel(title, 25);
+  const truncatedSubtitle = subtitle ? truncateLabel(subtitle, 25) : null;
   const remaining = otp?.remaining ?? (entry.period ?? 30);
   const period = otp?.period ?? (entry.period ?? 30);
   const progress = Math.max(4, Math.round((remaining / period) * 100));
@@ -311,9 +316,11 @@ const renderEntryCard = (entry: TOTPEntry, state: AppState, foldersById: Map<str
     <article class="otp-card card" data-entry-card="${escapeHtml(entry.id)}">
       <div class="otp-card__header">
         <div class="avatar" aria-hidden="true">${renderEntryAvatar(entry)}</div>
-        <div class="otp-card__identity">
-          ${subtitle ? `<p class="eyebrow">${escapeHtml(subtitle)}</p>` : '<p class="eyebrow">Stored account</p>'}
-          <h3>${escapeHtml(title)}</h3>
+        <div class="otp-card__identity" title="${escapeHtml(entry.name)}">
+          ${subtitle
+            ? `<p class="eyebrow otp-card__subtitle" title="${escapeHtml(subtitle)}">${escapeHtml(truncatedSubtitle ?? subtitle)}</p>`
+            : '<p class="eyebrow otp-card__subtitle">Stored account</p>'}
+          <h3 class="otp-card__title" title="${escapeHtml(title)}">${escapeHtml(truncatedTitle)}</h3>
         </div>
         ${folder
       ? `<span class="badge badge--neutral">${escapeHtml(folder.name)}</span>`
