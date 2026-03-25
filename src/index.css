@@ -188,7 +188,6 @@ a {
 
 .principle p,
 .supporting-text,
-.stat-card p,
 .field-hint,
 .meta-row,
 .clean-list {
@@ -537,7 +536,6 @@ a {
 
 .secret-box code,
 .otp-card__code,
-.stat-card strong,
 .sidebar__profile strong {
   font-family: var(--mono);
 }
@@ -636,7 +634,7 @@ a {
 }
 
 .sidebar--mobile .nav-list {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .sidebar--mobile .nav-item {
@@ -662,7 +660,6 @@ a {
 .workspace__header,
 .hero-strip,
 .search-panel,
-.stat-card,
 .empty-state,
 .modal,
 .danger-panel,
@@ -795,15 +792,28 @@ a {
   gap: 18px;
 }
 
+.info-panel .stats-grid {
+  align-items: stretch;
+}
+
 .stat-card {
   display: grid;
-  gap: 10px;
+  gap: 12px;
   min-width: 0;
   overflow: hidden;
+  padding: 22px;
+}
+
+.stat-card p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.6;
 }
 
 .stat-card strong {
-  font-size: 1.9rem;
+  font-family: var(--mono);
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+  line-height: 1;
 }
 
 .otp-grid,

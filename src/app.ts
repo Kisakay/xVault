@@ -287,7 +287,13 @@ export class XVaultApp {
 
     document.title =
       this.state.screen === 'vault'
-        ? 'xVault | Vault'
+        ? this.state.activePanel === 'backup'
+          ? 'xVault | Backup'
+          : this.state.activePanel === 'security'
+            ? 'xVault | Security'
+            : this.state.activePanel === 'info'
+              ? 'xVault | Info'
+              : 'xVault | Vault'
         : this.state.screen === 'locked'
           ? 'xVault | Unlock'
           : 'xVault';

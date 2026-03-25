@@ -2,7 +2,7 @@ import type { Folder, TOTPEntry } from './types';
 import type { User } from './utils/api';
 
 export type Screen = 'booting' | 'auth' | 'locked' | 'vault';
-export type NavPanel = 'codes' | 'backup' | 'security';
+export type NavPanel = 'codes' | 'backup' | 'security' | 'info';
 export type AuthMode = 'login' | 'register';
 export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 export type ToastTone = 'success' | 'error' | 'info';

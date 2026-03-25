@@ -90,11 +90,10 @@ const getEntryEditorValues = (state: AppState): {
 const renderEntryIconEditor = (iconData: string): string => `
   <div class="icon-editor">
     <div class="icon-editor__preview ${iconData ? 'has-image' : ''}">
-      ${
-        iconData
-          ? `<img id="entry-icon-preview-image" class="icon-editor__image" src="${escapeHtml(iconData)}" alt="" />`
-          : `<span id="entry-icon-preview-fallback" class="icon-editor__fallback">+</span>`
-      }
+      ${iconData
+    ? `<img id="entry-icon-preview-image" class="icon-editor__image" src="${escapeHtml(iconData)}" alt="" />`
+    : `<span id="entry-icon-preview-fallback" class="icon-editor__fallback">+</span>`
+  }
     </div>
     <div class="icon-editor__controls">
       <label class="button button--secondary icon-editor__upload">
@@ -162,9 +161,8 @@ const renderBootScreen = (): string => `
 const renderAuthScreen = ({ state }: RenderModel): string => `
   <main class="screen auth-screen auth-screen--compact">
     <section class="auth-panel card">
-      ${
-        state.registerLoginId
-          ? `
+      ${state.registerLoginId
+    ? `
             <div class="success-panel">
               <p class="eyebrow">Vault created</p>
               <h2>Keep this login ID.</h2>
@@ -180,7 +178,7 @@ const renderAuthScreen = ({ state }: RenderModel): string => `
               </button>
             </div>
           `
-          : `
+    : `
             <div class="segmented-control" role="tablist" aria-label="Authentication mode">
               <button
                 class="segmented-control__item ${state.authMode === 'login' ? 'is-active' : ''}"
@@ -205,23 +203,21 @@ const renderAuthScreen = ({ state }: RenderModel): string => `
               <h2>${state.authMode === 'register' ? 'Create a vault built for 2FA hygiene.' : 'Access your encrypted OTP vault.'}</h2>
             </div>
 
-            ${
-              state.authError
-                ? `<div class="notice notice--error" role="alert">${escapeHtml(state.authError)}</div>`
-                : ''
-            }
+            ${state.authError
+      ? `<div class="notice notice--error" role="alert">${escapeHtml(state.authError)}</div>`
+      : ''
+    }
 
             <form data-form="auth" class="stack-lg">
-              ${
-                state.authMode === 'login'
-                  ? `
+              ${state.authMode === 'login'
+      ? `
                     <label class="field">
                       <span>Login ID</span>
                       <input id="auth-login-id" name="loginId" type="text" autocomplete="username" placeholder="e.g. A7cK2xQp" />
                     </label>
                   `
-                  : ''
-              }
+      : ''
+    }
               <label class="field">
                 <span>${state.authMode === 'register' ? 'Encryption password' : 'Password'}</span>
                 <input
@@ -232,17 +228,16 @@ const renderAuthScreen = ({ state }: RenderModel): string => `
                   placeholder="${state.authMode === 'register' ? 'Use a strong passphrase' : 'Enter your password'}"
                 />
               </label>
-              ${
-                state.authMode === 'register'
-                  ? `<p class="field-hint">This password protects the vault data server-side. There is no magic recovery flow, so choose deliberately.</p>`
-                  : ''
-              }
+              ${state.authMode === 'register'
+      ? `<p class="field-hint">This password protects the vault data server-side. There is no magic recovery flow, so choose deliberately.</p>`
+      : ''
+    }
               <button class="button button--primary button--block" type="submit" ${state.pending.auth ? 'disabled' : ''}>
                 ${state.pending.auth ? 'Working...' : state.authMode === 'register' ? 'Create secure vault' : 'Sign in'}
               </button>
             </form>
           `
-      }
+  }
     </section>
   </main>
 `;
@@ -259,20 +254,18 @@ const renderLockedScreen = ({ state }: RenderModel): string => `
         </p>
       </div>
 
-      ${
-        state.unlockError
-          ? `
+      ${state.unlockError
+    ? `
             <div class="notice notice--error" role="alert">
               <p>${escapeHtml(state.unlockError)}</p>
-              ${
-                state.unlockAttemptsLeft !== undefined
-                  ? `<p class="supporting-text">Attempts left: ${state.unlockAttemptsLeft}</p>`
-                  : ''
-              }
+              ${state.unlockAttemptsLeft !== undefined
+      ? `<p class="supporting-text">Attempts left: ${state.unlockAttemptsLeft}</p>`
+      : ''
+    }
             </div>
           `
-          : ''
-      }
+    : ''
+  }
 
       <form data-form="unlock" class="stack-lg">
         <label class="field">
@@ -290,24 +283,6 @@ const renderLockedScreen = ({ state }: RenderModel): string => `
     </section>
   </main>
 `;
-
-const renderSaveBadge = (state: AppState): string => {
-  const labels: Record<AppState['saveStatus'], string> = {
-    idle: 'Ready',
-    saving: 'Encrypting changes',
-    saved: 'Encrypted backup synced',
-    error: 'Save issue',
-  };
-
-  const tone =
-    state.saveStatus === 'error'
-      ? 'badge--danger'
-      : state.saveStatus === 'saving'
-        ? 'badge--accent'
-        : 'badge--neutral';
-
-  return `<span class="badge ${tone}" aria-live="polite">${labels[state.saveStatus]}</span>`;
-};
 
 const renderEntryAvatar = (entry: TOTPEntry): string => {
   if (entry.isCustomIcon && entry.icon.startsWith('data:image/')) {
@@ -340,11 +315,10 @@ const renderEntryCard = (entry: TOTPEntry, state: AppState, foldersById: Map<str
           ${subtitle ? `<p class="eyebrow">${escapeHtml(subtitle)}</p>` : '<p class="eyebrow">Stored account</p>'}
           <h3>${escapeHtml(title)}</h3>
         </div>
-        ${
-          folder
-            ? `<span class="badge badge--neutral">${escapeHtml(folder.name)}</span>`
-            : '<span class="badge badge--neutral">Ungrouped</span>'
-        }
+        ${folder
+      ? `<span class="badge badge--neutral">${escapeHtml(folder.name)}</span>`
+      : '<span class="badge badge--neutral">Ungrouped</span>'
+    }
       </div>
 
       <div class="otp-card__body">
@@ -384,22 +358,21 @@ const renderEntryCard = (entry: TOTPEntry, state: AppState, foldersById: Map<str
 
 const renderCodesPanel = ({ state, visibleEntries, foldersById }: RenderModel): string => `
   <section class="panel stack-xl">
+  ${state.isMobile ? '' : `
     <div class="hero-strip card">
       <div>
         <p class="eyebrow">Operations</p>
       </div>
       <div class="hero-strip__actions">
-        ${state.isMobile ? '' : '<button class="button button--secondary" data-action="open-folder-modal" type="button">New folder</button>'}
+        <button class="button button--secondary" data-action="open-folder-modal" type="button">New folder</button>
         <button class="button button--primary" data-action="open-create-entry" type="button">New account</button>
-        ${renderSaveBadge(state)}
       </div>
     </div>
-
+    `}
     <section class="codes-layout">
-      ${
-        state.isMobile
-          ? ''
-          : `
+      ${state.isMobile
+    ? ''
+    : `
             <article class="card panel-card folder-card stack-lg">
               <div class="panel-heading">
                 <p class="eyebrow">Folders</p>
@@ -418,19 +391,18 @@ const renderCodesPanel = ({ state, visibleEntries, foldersById }: RenderModel): 
                   </span>
                   <span class="badge badge--neutral">${state.entries.length}</span>
                 </button>
-                ${
-                  state.folders.length === 0
-                    ? `
+                ${state.folders.length === 0
+      ? `
                       <div class="folder-state">
                         <p>No folders yet. Create one for workspaces, clients, or critical infra.</p>
                       </div>
                     `
-                    : state.folders
-                        .slice()
-                        .sort((left, right) => left.name.localeCompare(right.name))
-                        .map((folder) => {
-                          const count = state.entries.filter((entry) => entry.folderId === folder.id).length;
-                          return `
+      : state.folders
+        .slice()
+        .sort((left, right) => left.name.localeCompare(right.name))
+        .map((folder) => {
+          const count = state.entries.filter((entry) => entry.folderId === folder.id).length;
+          return `
                             <div class="folder-row-shell">
                               <button
                                 class="folder-row ${state.activeFolderId === folder.id ? 'is-active' : ''}"
@@ -450,34 +422,15 @@ const renderCodesPanel = ({ state, visibleEntries, foldersById }: RenderModel): 
                               </div>
                             </div>
                           `;
-                        })
-                        .join('')
-                }
+        })
+        .join('')
+    }
               </div>
-              <button class="button button--secondary button--block" data-action="open-folder-modal" type="button">Create folder</button>
             </article>
           `
-      }
+  }
 
       <div class="stack-xl">
-    <div class="stats-grid">
-      <article class="stat-card card">
-        <span class="eyebrow">Accounts</span>
-        <strong>${state.activeFolderId ? visibleEntries.length : state.entries.length}</strong>
-        <p>OTP entries ready for quick access.</p>
-      </article>
-      <article class="stat-card card">
-        <span class="eyebrow">${state.isMobile ? 'Mobile mode' : 'Collections'}</span>
-        <strong>${state.isMobile ? 'Lite' : state.folders.length}</strong>
-        <p>${state.isMobile ? 'Folder management is hidden on phone for a faster, cleaner UI.' : 'Existing groupings are preserved without adding UI noise.'}</p>
-      </article>
-      <article class="stat-card card">
-        <span class="eyebrow">Shortcuts</span>
-        <strong>${state.isMobile ? 'Tap first' : 'S · N · L'}</strong>
-        <p>${state.isMobile ? 'Core actions stay visible without extra controls.' : 'Search, create, and lock without touching the mouse.'}</p>
-      </article>
-    </div>
-
     <section class="search-panel card">
       <label class="field field--search">
         <span>Quick search</span>
@@ -494,57 +447,75 @@ const renderCodesPanel = ({ state, visibleEntries, foldersById }: RenderModel): 
             placeholder="Search by issuer, account, or collection"
             value="${escapeHtml(state.search)}"
           />
-          ${
-            state.isMobile
-              ? ''
-              : `
+          ${state.isMobile
+    ? ''
+    : `
                 <span class="spotlight-search__shortcut" aria-hidden="true">
                   <kbd>S</kbd>
                 </span>
               `
-          }
+  }
         </div>
       </label>
       <p class="field-hint">
-        ${
-          state.search
-            ? `${visibleEntries.length} result(s) for “${escapeHtml(state.search)}”.`
-            : !state.isMobile && state.activeFolderId
-              ? `Showing only ${escapeHtml(foldersById.get(state.activeFolderId)?.name ?? 'the selected folder')}.`
-              : 'Search remains local to the current screen and never exposes secrets.'
-        }
+        ${state.search
+    ? `${visibleEntries.length} result(s) for “${escapeHtml(state.search)}”.`
+    : !state.isMobile && state.activeFolderId
+      ? `Showing only ${escapeHtml(foldersById.get(state.activeFolderId)?.name ?? 'the selected folder')}.`
+      : 'Search remains local to the current screen and never exposes secrets.'
+  }
       </p>
     </section>
 
-    ${
-      state.entries.length === 0
-        ? `
+    ${state.entries.length === 0
+    ? `
             <section class="empty-state card">
               <p class="eyebrow">Vault ready</p>
               <h2>No OTP accounts yet.</h2>
               <p class="supporting-text">Add a secret manually, paste an otpauth URI, or import an encrypted xVault backup.</p>
               <div class="inline-actions">
               <button class="button button--primary" data-action="open-create-entry" type="button">Add first account</button>
-              ${state.isMobile ? '' : '<button class="button button--secondary" data-action="open-folder-modal" type="button">Create folder</button>'}
               <button class="button button--ghost" data-action="open-import" type="button">Import backup</button>
               </div>
             </section>
         `
-        : visibleEntries.length === 0
-          ? `
+    : visibleEntries.length === 0
+      ? `
             <section class="empty-state card">
               <p class="eyebrow">No match</p>
               <h2>Your filters returned zero accounts.</h2>
               <p class="supporting-text">Try a broader search or clear the current query to return to all active OTP entries.</p>
             </section>
           `
-          : `
+      : `
             <section class="otp-grid">
               ${visibleEntries.map((entry) => renderEntryCard(entry, state, foldersById)).join('')}
             </section>
           `
-    }
+  }
       </div>
+    </section>
+  </section>
+`;
+
+const renderInfoPanel = ({ state }: RenderModel): string => `
+  <section class="panel stack-xl">
+    <section class="stats-grid">
+      <article class="stat-card card">
+        <span class="eyebrow">Accounts</span>
+        <strong>${state.entries.length}</strong>
+        <p>Stored OTP entries ready for quick access.</p>
+      </article>
+      <article class="stat-card card">
+        <span class="eyebrow">Collections</span>
+        <strong>${state.folders.length}</strong>
+        <p>Folders available to organize the vault cleanly.</p>
+      </article>
+      <article class="stat-card card">
+        <span class="eyebrow">Shortcuts</span>
+        <strong>${state.isMobile ? 'Tap actions' : 'S · N · L'}</strong>
+        <p>${state.isMobile ? 'Search, add, and lock stay reachable from the mobile shell.' : 'Search, create, and lock without leaving the keyboard.'}</p>
+      </article>
     </section>
   </section>
 `;
@@ -663,12 +634,15 @@ const renderVaultScreen = (model: RenderModel): string => {
   const { state } = model;
   const entryEditor = getEntryEditorValues(state);
   const folderEditor = getFolderEditorValues(state);
-  const activePanelLabel = state.activePanel === 'backup' ? 'Backup' : 'Security';
+  const activePanelLabel =
+    state.activePanel === 'backup' ? 'Backup' : state.activePanel === 'security' ? 'Security' : 'Info';
 
   const activePanelDescription =
     state.activePanel === 'backup'
       ? 'Protect continuity before you need it.'
-      : 'Manage identity, session, and password hygiene.';
+      : state.activePanel === 'security'
+        ? 'Manage identity, session, and password hygiene.'
+        : 'See vault totals and the core actions available across the app.';
 
   return `
     <main class="screen vault-screen">
@@ -699,54 +673,52 @@ const renderVaultScreen = (model: RenderModel): string => {
             <button class="nav-item ${state.activePanel === 'security' ? 'is-active' : ''}" data-action="go-panel" data-panel="security" type="button">
               Security
             </button>
+            <button class="nav-item ${state.activePanel === 'info' ? 'is-active' : ''}" data-action="go-panel" data-panel="info" type="button">
+              Info
+            </button>
           </nav>
 
           <div class="sidebar__actions">
             <button class="button button--primary button--block" data-action="open-create-entry" type="button">Add account</button>
-            ${
-              state.isMobile
-                ? ''
-                : `
+            ${state.isMobile
+      ? ''
+      : `
                   <button class="button button--secondary button--block" data-action="open-folder-modal" type="button">New folder</button>
                   <button class="button button--secondary button--block" data-action="lock-vault" type="button">Lock</button>
                   <button class="button button--ghost button--block" data-action="logout" type="button">Sign out</button>
                 `
-            }
+    }
           </div>
         </aside>
 
         <section class="workspace">
-          ${
-            state.activePanel === 'codes'
-              ? ''
-              : `
+          ${state.activePanel === 'codes'
+      ? ''
+      : `
                 <header class="workspace__header card">
                   <div>
                     <p class="eyebrow">${activePanelLabel}</p>
                     <h2>${activePanelDescription}</h2>
                   </div>
-                  <div class="workspace__header-actions">
-                    ${renderSaveBadge(state)}
-                  </div>
                 </header>
               `
-          }
+    }
 
-          ${
-            state.activePanel === 'codes'
-              ? renderCodesPanel(model)
-              : state.activePanel === 'backup'
-                ? renderBackupPanel(model)
-                : renderSecurityPanel(model)
-          }
+          ${state.activePanel === 'codes'
+      ? renderCodesPanel(model)
+      : state.activePanel === 'backup'
+        ? renderBackupPanel(model)
+        : state.activePanel === 'security'
+          ? renderSecurityPanel(model)
+          : renderInfoPanel(model)
+    }
 
           <input id="import-backup-file" data-import-file="true" class="hidden-input" type="file" accept=".json,application/json" />
         </section>
       </div>
 
-      ${
-        state.entryModalMode
-          ? `
+      ${state.entryModalMode
+      ? `
             <div class="modal-overlay" role="presentation">
               <section class="modal card" role="dialog" aria-modal="true" aria-labelledby="add-account-title">
                 <div class="modal__header">
@@ -757,9 +729,8 @@ const renderVaultScreen = (model: RenderModel): string => {
                   <button class="button button--ghost" data-action="close-entry-modal" type="button">Close</button>
                 </div>
                 <form data-form="save-entry" class="stack-lg">
-                  ${
-                    state.entryModalMode === 'create'
-                      ? `
+                  ${state.entryModalMode === 'create'
+        ? `
                         <label class="field">
                           <span>Account name</span>
                           <input id="entry-account-name" name="accountName" type="text" placeholder="GitHub, Google, AWS" value="${escapeHtml(entryEditor.accountName)}" />
@@ -772,10 +743,9 @@ const renderVaultScreen = (model: RenderModel): string => {
                           <button class="button button--secondary" data-action="open-qr-scanner" type="button">Scan QR code</button>
                         </div>
                         ${renderEntryIconEditor(entryEditor.iconData)}
-                        ${
-                          state.isMobile
-                            ? ''
-                            : `
+                        ${state.isMobile
+          ? ''
+          : `
                               <label class="field">
                                 <span>Collection</span>
                                 <select id="entry-folder" name="folderId">
@@ -784,12 +754,12 @@ const renderVaultScreen = (model: RenderModel): string => {
                                 </select>
                               </label>
                             `
-                        }
+        }
                         <p class="field-hint">
                           ${state.isMobile ? 'Mobile mode keeps creation intentionally minimal: name, secret, scan, done.' : 'Keep creation fast: just a name and a secret. If you paste a full <code>otpauth://</code> URI in the secret field, xVault will parse it automatically.'}
                         </p>
                       `
-                      : `
+        : `
                         <label class="field">
                           <span>Secret or otpauth URI</span>
                           <textarea
@@ -829,10 +799,9 @@ const renderVaultScreen = (model: RenderModel): string => {
                               <option value="60" ${entryEditor.period === 60 ? 'selected' : ''}>60 seconds</option>
                             </select>
                           </label>
-                          ${
-                            state.isMobile
-                              ? ''
-                              : `
+                          ${state.isMobile
+          ? ''
+          : `
                                 <label class="field">
                                   <span>Collection</span>
                                   <select id="entry-folder" name="folderId">
@@ -841,13 +810,13 @@ const renderVaultScreen = (model: RenderModel): string => {
                                   </select>
                                 </label>
                               `
-                          }
+        }
                         </div>
                         <p class="field-hint">
                           ${state.isMobile ? 'Mobile mode keeps editing focused on the OTP itself.' : 'Use edit mode when you need to correct issuer, digits, refresh period, or reclassify an existing OTP entry.'}
                         </p>
                       `
-                  }
+      }
                   <div class="inline-actions inline-actions--end">
                     <button class="button button--ghost" data-action="close-entry-modal" type="button">Cancel</button>
                     <button class="button button--primary" type="submit">${entryEditor.submitLabel}</button>
@@ -856,12 +825,11 @@ const renderVaultScreen = (model: RenderModel): string => {
               </section>
             </div>
           `
-          : ''
-      }
+      : ''
+    }
 
-      ${
-        !state.isMobile && state.folderModalOpen
-          ? `
+      ${!state.isMobile && state.folderModalOpen
+      ? `
             <div class="modal-overlay" role="presentation">
               <section class="modal modal--narrow card" role="dialog" aria-modal="true" aria-labelledby="folder-modal-title">
                 <div class="modal__header">
@@ -894,12 +862,11 @@ const renderVaultScreen = (model: RenderModel): string => {
               </section>
             </div>
           `
-          : ''
-      }
+      : ''
+    }
 
-      ${
-        state.qrScannerOpen
-          ? `
+      ${state.qrScannerOpen
+      ? `
             <div class="modal-overlay modal-overlay--scanner" role="presentation">
               <section class="scanner-modal card" role="dialog" aria-modal="true" aria-labelledby="qr-scanner-title">
                 <div class="modal__header">
@@ -919,8 +886,8 @@ const renderVaultScreen = (model: RenderModel): string => {
               </section>
             </div>
           `
-          : ''
-      }
+      : ''
+    }
     </main>
   `;
 };
