@@ -746,6 +746,20 @@ export class XVaultApp {
       case 'close-entry-modal':
         this.closeEntryModal();
         break;
+      case 'clear-entry-icon': {
+        const hiddenInput = this.root.querySelector<HTMLInputElement>('#entry-icon-data');
+        const preview = this.root.querySelector<HTMLElement>('.icon-editor__preview');
+        if (hiddenInput) {
+          hiddenInput.value = '';
+        }
+        if (preview) {
+          preview.classList.remove('has-image');
+          preview.innerHTML = '<span id="entry-icon-preview-fallback" class="icon-editor__fallback">+</span>';
+        }
+        const clearButton = actionNode as HTMLButtonElement;
+        clearButton.disabled = true;
+        break;
+      }
       case 'open-qr-scanner':
         this.openQrScanner();
         break;
@@ -889,6 +903,58 @@ export class XVaultApp {
 
   private async handleChange(event: Event): Promise<void> {
     const target = event.target;
+
+    if (target instanceof HTMLInputElement && target.id === 'entry-icon-file') {
+      const file = target.files?.[0];
+      if (!file) {
+        return;
+      }
+
+      if (!file.type.startsWith('image/')) {
+        this.showToast('Only image files can be used as TOTP icons.', 'error');
+        target.value = '';
+        return;
+      }
+
+      try {
+        const imageData = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            if (typeof reader.result === 'string') {
+              resolve(reader.result);
+              return;
+            }
+            reject(new Error('Invalid file content.'));
+          };
+          reader.onerror = () => reject(new Error('Unable to read the selected image.'));
+          reader.readAsDataURL(file);
+        });
+
+        const hiddenInput = this.root.querySelector<HTMLInputElement>('#entry-icon-data');
+        const preview = this.root.querySelector<HTMLElement>('.icon-editor__preview');
+        const clearButton = this.root.querySelector<HTMLButtonElement>('[data-action="clear-entry-icon"]');
+
+        if (hiddenInput) {
+          hiddenInput.value = imageData;
+        }
+
+        if (preview) {
+          preview.classList.add('has-image');
+          preview.innerHTML = `<img id="entry-icon-preview-image" class="icon-editor__image" src="${imageData}" alt="" />`;
+        }
+
+        if (clearButton) {
+          clearButton.disabled = false;
+        }
+
+        target.value = '';
+      } catch (error) {
+        console.error('Failed to load icon file:', error);
+        this.showToast(error instanceof Error ? error.message : 'Unable to load the icon file.', 'error');
+      }
+
+      return;
+    }
 
     if (!(target instanceof HTMLInputElement) || !target.dataset.importFile) {
       return;
@@ -1066,6 +1132,7 @@ export class XVaultApp {
     const digits = Number(readText(formData, 'digits') || '6');
     const period = Number(readText(formData, 'period') || '30');
     const folderId = this.state.isMobile ? '' : readText(formData, 'folderId');
+    const iconData = readText(formData, 'iconData');
 
     try {
       const parsed = source ? parseOtpAuthUri(source) : null;
@@ -1081,15 +1148,16 @@ export class XVaultApp {
         throw new Error('The secret must be a valid Base32 value.');
       }
 
+      const isCustomIcon = iconData.startsWith('data:image/');
       const nextEntry: TOTPEntry = {
         id: this.state.editingEntryId ?? crypto.randomUUID(),
         name: deriveEntryName(accountName, issuer),
         secret,
-        icon: issuer ? issuer.slice(0, 1).toUpperCase() : '•',
+        icon: isCustomIcon ? iconData : issuer ? issuer.slice(0, 1).toUpperCase() : '•',
         digits: parsed?.digits ?? digits,
         period: parsed?.period ?? period,
         folderId: folderId || undefined,
-        isCustomIcon: false,
+        isCustomIcon,
       };
 
       const isEditing = this.state.entryModalMode === 'edit' && this.state.editingEntryId !== null;

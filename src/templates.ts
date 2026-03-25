@@ -52,6 +52,7 @@ const getEntryEditorValues = (state: AppState): {
   digits: number;
   period: number;
   folderId: string | null;
+  iconData: string;
 } => {
   const entry = state.editingEntryId ? state.entries.find((item) => item.id === state.editingEntryId) ?? null : null;
 
@@ -66,6 +67,7 @@ const getEntryEditorValues = (state: AppState): {
       digits: 6,
       period: 30,
       folderId: state.activeFolderId,
+      iconData: '',
     };
   }
 
@@ -81,8 +83,32 @@ const getEntryEditorValues = (state: AppState): {
     digits: entry.digits ?? 6,
     period: entry.period ?? 30,
     folderId: entry.folderId ?? null,
+    iconData: entry.isCustomIcon && entry.icon.startsWith('data:image/') ? entry.icon : '',
   };
 };
+
+const renderEntryIconEditor = (iconData: string): string => `
+  <div class="icon-editor">
+    <div class="icon-editor__preview ${iconData ? 'has-image' : ''}">
+      ${
+        iconData
+          ? `<img id="entry-icon-preview-image" class="icon-editor__image" src="${escapeHtml(iconData)}" alt="" />`
+          : `<span id="entry-icon-preview-fallback" class="icon-editor__fallback">+</span>`
+      }
+    </div>
+    <div class="icon-editor__controls">
+      <label class="button button--secondary icon-editor__upload">
+        <input id="entry-icon-file" name="iconFile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" hidden />
+        Upload icon
+      </label>
+      <button class="button button--ghost" data-action="clear-entry-icon" type="button" ${iconData ? '' : 'disabled'}>
+        Remove icon
+      </button>
+      <input id="entry-icon-data" name="iconData" type="hidden" value="${escapeHtml(iconData)}" />
+      <p class="field-hint">Square logos work best. The image is stored with the OTP entry and shown on the card.</p>
+    </div>
+  </div>
+`;
 
 const getFolderEditorValues = (state: AppState): {
   modeLabel: string;
@@ -735,6 +761,7 @@ const renderVaultScreen = (model: RenderModel): string => {
                         <div class="inline-actions">
                           <button class="button button--secondary" data-action="open-qr-scanner" type="button">Scan QR code</button>
                         </div>
+                        ${renderEntryIconEditor(entryEditor.iconData)}
                         ${
                           state.isMobile
                             ? ''
@@ -776,6 +803,7 @@ const renderVaultScreen = (model: RenderModel): string => {
                           <span>Base32 secret</span>
                           <input id="entry-secret" name="secret" type="text" placeholder="JBSWY3DPEHPK3PXP" value="${escapeHtml(entryEditor.secret)}" />
                         </label>
+                        ${renderEntryIconEditor(entryEditor.iconData)}
                         <div class="field-grid ${state.isMobile ? 'field-grid--two' : ''}">
                           <label class="field">
                             <span>Digits</span>
