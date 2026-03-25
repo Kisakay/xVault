@@ -82,14 +82,12 @@ export class XVaultApp {
   private readonly root: HTMLElement;
   private readonly state: AppState;
   private readonly mobileMediaQuery = window.matchMedia('(max-width: 720px)');
-  private readonly hoverMediaQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
   private saveTimer: number | null = null;
   private toastTimer: number | null = null;
   private otpRefreshToken = 0;
   private qrScannerStream: MediaStream | null = null;
   private qrScannerFrame: number | null = null;
   private readonly qrScannerCanvas = document.createElement('canvas');
-  private activeGlowCard: HTMLElement | null = null;
 
   constructor(root: HTMLElement) {
     this.root = root;
@@ -111,24 +109,8 @@ export class XVaultApp {
     window.addEventListener('keydown', (event) => {
       this.handleKeydown(event);
     });
-    window.addEventListener('pointermove', (event) => {
-      this.handlePointerGlow(event);
-    });
-    window.addEventListener('pointerout', (event) => {
-      if (event.relatedTarget === null) {
-        this.clearPointerGlow();
-      }
-    });
-    window.addEventListener('blur', () => {
-      this.clearPointerGlow();
-    });
     this.mobileMediaQuery.addEventListener('change', (event) => {
       this.handleMobileModeChange(event.matches);
-    });
-    this.hoverMediaQuery.addEventListener('change', () => {
-      if (!this.hoverMediaQuery.matches) {
-        this.clearPointerGlow();
-      }
     });
 
     window.setInterval(() => {
@@ -146,46 +128,9 @@ export class XVaultApp {
       this.state.activeFolderId = null;
       this.state.folderModalOpen = false;
       this.state.editingFolderId = null;
-      this.clearPointerGlow();
     }
 
     this.render(false);
-  }
-
-  private handlePointerGlow(event: PointerEvent): void {
-    if (this.state.isMobile || !this.hoverMediaQuery.matches || event.pointerType === 'touch') {
-      this.clearPointerGlow();
-      return;
-    }
-
-    document.documentElement.style.setProperty('--pointer-x', `${event.clientX}px`);
-    document.documentElement.style.setProperty('--pointer-y', `${event.clientY}px`);
-    document.documentElement.style.setProperty('--pointer-glow-opacity', '1');
-
-    const glowCard = event.target instanceof Element ? event.target.closest<HTMLElement>('.card') : null;
-
-    if (glowCard !== this.activeGlowCard) {
-      this.activeGlowCard?.removeAttribute('data-glow-active');
-      this.activeGlowCard?.style.removeProperty('--card-glow-opacity');
-      this.activeGlowCard = glowCard;
-      this.activeGlowCard?.setAttribute('data-glow-active', 'true');
-    }
-
-    if (!glowCard) {
-      return;
-    }
-
-    const rect = glowCard.getBoundingClientRect();
-    glowCard.style.setProperty('--card-glow-x', `${event.clientX - rect.left}px`);
-    glowCard.style.setProperty('--card-glow-y', `${event.clientY - rect.top}px`);
-    glowCard.style.setProperty('--card-glow-opacity', '1');
-  }
-
-  private clearPointerGlow(): void {
-    document.documentElement.style.setProperty('--pointer-glow-opacity', '0');
-    this.activeGlowCard?.removeAttribute('data-glow-active');
-    this.activeGlowCard?.style.removeProperty('--card-glow-opacity');
-    this.activeGlowCard = null;
   }
 
   private async boot(): Promise<void> {
