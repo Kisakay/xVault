@@ -529,6 +529,10 @@ a {
   gap: 24px;
 }
 
+.workspace > * {
+  min-width: 0;
+}
+
 .panel-card,
 .workspace__header,
 .hero-strip,
@@ -548,6 +552,10 @@ a {
   grid-template-columns: 300px minmax(0, 1fr);
   gap: 18px;
   align-items: start;
+}
+
+.codes-layout > * {
+  min-width: 0;
 }
 
 .folder-card {
@@ -665,6 +673,8 @@ a {
 .stat-card {
   display: grid;
   gap: 10px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .stat-card strong {
@@ -685,6 +695,8 @@ a {
   padding: 24px;
   display: grid;
   gap: 18px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .otp-card__header,
@@ -866,18 +878,36 @@ a {
   border-color: rgba(255, 140, 140, 0.3);
 }
 
+@media (max-width: 1440px) {
+  .codes-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .folder-card {
+    position: static;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 1180px) {
   .auth-screen,
   .app-shell,
-  .codes-layout,
   .otp-grid,
-  .stats-grid,
   .field-grid {
     grid-template-columns: 1fr;
   }
 
   .sidebar {
     position: static;
+  }
+}
+
+@media (max-width: 960px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
   }
 }
 
