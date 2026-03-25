@@ -665,19 +665,12 @@ const renderVaultScreen = (model: RenderModel): string => {
   const { state } = model;
   const entryEditor = getEntryEditorValues(state);
   const folderEditor = getFolderEditorValues(state);
-  const activePanelLabel =
-    state.activePanel === 'codes'
-      ? 'Vault'
-      : state.activePanel === 'backup'
-        ? 'Backup'
-        : 'Security';
+  const activePanelLabel = state.activePanel === 'backup' ? 'Backup' : 'Security';
 
   const activePanelDescription =
-    state.activePanel === 'codes'
-      ? 'Keep OTP access fast and intentional.'
-      : state.activePanel === 'backup'
-        ? 'Protect continuity before you need it.'
-        : 'Manage identity, session, and password hygiene.';
+    state.activePanel === 'backup'
+      ? 'Protect continuity before you need it.'
+      : 'Manage identity, session, and password hygiene.';
 
   return `
     <main class="screen vault-screen">
@@ -725,18 +718,21 @@ const renderVaultScreen = (model: RenderModel): string => {
         </aside>
 
         <section class="workspace">
-          <header class="workspace__header card">
-            <div>
-              <p class="eyebrow">${activePanelLabel}</p>
-              <h2>${activePanelDescription}</h2>
-            </div>
-            <div class="workspace__header-actions">
-              ${renderSaveBadge(state)}
-              <button class="button button--ghost" data-action="focus-search" type="button" ${state.activePanel !== 'codes' ? 'disabled' : ''}>
-                Search
-              </button>
-            </div>
-          </header>
+          ${
+            state.activePanel === 'codes'
+              ? ''
+              : `
+                <header class="workspace__header card">
+                  <div>
+                    <p class="eyebrow">${activePanelLabel}</p>
+                    <h2>${activePanelDescription}</h2>
+                  </div>
+                  <div class="workspace__header-actions">
+                    ${renderSaveBadge(state)}
+                  </div>
+                </header>
+              `
+          }
 
           ${
             state.activePanel === 'codes'
