@@ -140,6 +140,12 @@ a {
   align-items: stretch;
 }
 
+.auth-screen--compact {
+  grid-template-columns: minmax(320px, 460px);
+  justify-content: center;
+  align-content: center;
+}
+
 .auth-hero,
 .auth-panel {
   padding: 36px;

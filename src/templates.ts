@@ -134,40 +134,7 @@ const renderBootScreen = (): string => `
 `;
 
 const renderAuthScreen = ({ state }: RenderModel): string => `
-  <main class="screen auth-screen">
-    <section class="auth-hero card">
-      <div class="brand-lockup">
-        <div class="brand-mark" aria-hidden="true">
-          <span>xV</span>
-        </div>
-        <div>
-          <p class="eyebrow">A2F vault manager</p>
-          <h1>Fast code access, deliberate security posture, and zero UI clutter.</h1>
-        </div>
-      </div>
-      <p class="lead">
-        xVault should feel like a security tool, not a demo. This rebuild prioritizes instant code access,
-        readable structure, encrypted backup hygiene, and clear failure states.
-      </p>
-      <div class="principles">
-        <article class="principle">
-          <span class="principle__index">01</span>
-          <h2>Minimal friction</h2>
-          <p>Login, unlock, search, copy. The core flow stays in one screen with keyboard shortcuts and sharp hierarchy.</p>
-        </article>
-        <article class="principle">
-          <span class="principle__index">02</span>
-          <h2>Security by interface</h2>
-          <p>Clear lock state, explicit backup actions, no secret leakage in the UI, and clipboard actions only on intent.</p>
-        </article>
-        <article class="principle">
-          <span class="principle__index">03</span>
-          <h2>Maintainable by default</h2>
-          <p>Native TypeScript, no React indirection, no styling sprawl, and a single view-state model instead of nested context soup.</p>
-        </article>
-      </div>
-    </section>
-
+  <main class="screen auth-screen auth-screen--compact">
     <section class="auth-panel card">
       ${
         state.registerLoginId
