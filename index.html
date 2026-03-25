@@ -2,41 +2,27 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>xVault</title>
-    
-    <!-- Open Graph / Discord Meta Tags -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://xvau.lt/" />
-    <meta property="og:title" content="xVault - Secure 2FA Authentication" />
-    <meta property="og:description" content="A secure vault for your two-factor authentication codes with end-to-end encryption." />
-    
-    <!-- Twitter Card / Discord Meta Tags -->
+    <meta property="og:title" content="xVault | Secure OTP Vault" />
+    <meta property="og:description" content="A deliberate, dark-first OTP vault focused on clarity, speed, and encrypted backup hygiene." />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://xvau.lt/" />
-    <meta name="twitter:title" content="xVault - Secure 2FA Authentication" />
-    <meta name="twitter:description" content="A secure vault for your two-factor authentication codes with end-to-end encryption." />
-    
-    <!-- Additional Meta Tags -->
-    <meta name="description" content="A secure vault for your two-factor authentication codes with end-to-end encryption." />
-    <meta name="theme-color" content="#3b82f6" />
-    <!-- Theme initialization script -->
+    <meta name="twitter:title" content="xVault | Secure OTP Vault" />
+    <meta name="twitter:description" content="A deliberate, dark-first OTP vault focused on clarity, speed, and encrypted backup hygiene." />
+    <meta
+      name="description"
+      content="xVault is a focused OTP vault manager with secure unlock flows, encrypted backups, and fast code access."
+    />
+    <meta name="theme-color" content="#081118" />
     <script>
-      // Check for saved theme preference or use system preference
-      const theme = localStorage.getItem('theme') || 'system';
-      
-      // Apply dark class based on preference
-      if (theme === 'dark' || 
-          (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
+      document.documentElement.dataset.theme = 'dark';
     </script>
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
