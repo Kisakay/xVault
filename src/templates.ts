@@ -198,7 +198,7 @@ const renderAuthScreen = ({ state }: RenderModel): string => `
               </button>
             </div>
 
-            <div class="panel-heading">
+            <div class="panel-heading auth-panel__heading">
               <p class="eyebrow">${state.authMode === 'register' ? 'New secure vault' : 'Welcome back'}</p>
               <h2>${state.authMode === 'register' ? 'Create a vault built for 2FA hygiene.' : 'Access your encrypted OTP vault.'}</h2>
             </div>

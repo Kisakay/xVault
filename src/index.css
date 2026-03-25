@@ -329,6 +329,10 @@ a {
   margin: 0;
 }
 
+.auth-panel__heading {
+  margin-top: 12px;
+}
+
 .stack-xl,
 .stack-lg,
 .stack-md,
