@@ -9,7 +9,8 @@
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prod": "bun run build && bun run server"
   },
   "dependencies": {
     "@types/uuid": "^10.0.0",

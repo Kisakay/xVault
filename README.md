@@ -148,7 +148,7 @@ npm install -g pm2
 npm run build
 
 # Start with PM2 using ecosystem config
-pm2 start ecosystem.config.js
+pm2 start pm2.config.cjs
 
 # Save PM2 process list
 pm2 save
