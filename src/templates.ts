@@ -387,7 +387,6 @@ const renderCodesPanel = ({ state, visibleEntries, foldersById }: RenderModel): 
     <div class="hero-strip card">
       <div>
         <p class="eyebrow">Operations</p>
-        <h2>Copy a code in one click, or add a new account without leaving the vault.</h2>
       </div>
       <div class="hero-strip__actions">
         ${state.isMobile ? '' : '<button class="button button--secondary" data-action="open-folder-modal" type="button">New folder</button>'}
