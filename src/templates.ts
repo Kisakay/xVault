@@ -403,8 +403,7 @@ const renderCodesPanel = ({ state, visibleEntries, foldersById }: RenderModel): 
             <article class="card panel-card folder-card stack-lg">
               <div class="panel-heading">
                 <p class="eyebrow">Folders</p>
-                <h2>Filter and maintain your collections.</h2>
-                <p class="supporting-text">Folder actions stay close to the vault instead of hiding in a separate settings area.</p>
+                <h2>Your collections.</h2>
               </div>
               <div class="folder-list">
                 <button
