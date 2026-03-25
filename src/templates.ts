@@ -250,7 +250,7 @@ const renderLockedScreen = ({ state }: RenderModel): string => `
     <section class="lock-panel card">
       <div class="panel-heading">
         <p class="eyebrow">Vault locked</p>
-        <h1>Enter your password to decrypt the current vault session.</h1>
+        <h1>Enter your password to decrypt the vault.</h1>
         <p class="supporting-text">
           ${escapeHtml(state.user?.name ?? 'My Vault')}
           ${state.user?.loginId ? ` · ${escapeHtml(state.user.loginId)}` : ''}
@@ -498,25 +498,23 @@ const renderCodesPanel = ({ state, visibleEntries, foldersById }: RenderModel): 
 `;
 
 const renderInfoPanel = ({ state }: RenderModel): string => `
-  <section class="panel stack-lg info-panel">
     <section class="stats-grid">
       <article class="stat-card card">
         <span class="eyebrow">Accounts</span>
         <strong>${state.entries.length}</strong>
-        <p>Stored OTP entries ready for quick access.</p>
+        <p>Ready OTP entries.</p>
       </article>
       <article class="stat-card card">
         <span class="eyebrow">Collections</span>
         <strong>${state.folders.length}</strong>
-        <p>Folders available to organize the vault cleanly.</p>
+        <p>Vault folders.</p>
       </article>
       <article class="stat-card card">
         <span class="eyebrow">Shortcuts</span>
         <strong>${state.isMobile ? 'Tap actions' : 'S · N · L'}</strong>
-        <p>${state.isMobile ? 'Search, add, and lock stay reachable from the mobile shell.' : 'Search, create, and lock without leaving the keyboard.'}</p>
+        <p>${state.isMobile ? 'Search, add, lock.' : 'Search, create, lock.'}</p>
       </article>
     </section>
-  </section>
 `;
 
 const renderBackupPanel = ({ state }: RenderModel): string => `
