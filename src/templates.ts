@@ -592,17 +592,6 @@ const renderSecurityPanel = ({ state }: RenderModel): string => `
       </form>
     </article>
 
-    <article class="card panel-card stack-lg">
-      <div class="panel-heading">
-        <p class="eyebrow">Session controls</p>
-        <h2>Lock fast or leave the session entirely.</h2>
-      </div>
-      <div class="inline-actions">
-        <button class="button button--secondary" data-action="lock-vault" type="button">Lock vault</button>
-        <button class="button button--ghost" data-action="logout" type="button">Sign out</button>
-      </div>
-    </article>
-
     <article class="card panel-card stack-lg danger-panel">
       <div class="panel-heading">
         <p class="eyebrow">Destructive action</p>
