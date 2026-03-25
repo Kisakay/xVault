@@ -491,7 +491,7 @@ const renderCodesPanel = ({ state, visibleEntries, foldersById }: RenderModel): 
 `;
 
 const renderInfoPanel = ({ state }: RenderModel): string => `
-  <section class="panel stack-xl">
+  <section class="panel stack-lg info-panel">
     <section class="stats-grid">
       <article class="stat-card card">
         <span class="eyebrow">Accounts</span>
