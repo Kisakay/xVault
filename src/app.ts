@@ -271,7 +271,7 @@ export class XVaultApp {
       const video = this.root.querySelector<HTMLVideoElement>('#qr-scanner-video');
       if (video && this.qrScannerStream && video.srcObject !== this.qrScannerStream) {
         video.srcObject = this.qrScannerStream;
-        void video.play().catch(() => {});
+        void video.play().catch(() => { });
       }
 
       if (this.qrScannerStream) {
@@ -1375,7 +1375,7 @@ export class XVaultApp {
       return;
     }
 
-    if (event.key === '/') {
+    if (event.key.toLowerCase() === 's') {
       event.preventDefault();
       this.root.querySelector<HTMLInputElement>('#vault-search')?.focus();
       return;

@@ -314,6 +314,80 @@ a {
   padding-left: 1rem;
 }
 
+.spotlight-search {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.07), transparent 65%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 18px 35px rgba(0, 0, 0, 0.16);
+}
+
+.spotlight-search:focus-within {
+  border-color: rgba(139, 199, 255, 0.32);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 0 0 4px rgba(139, 199, 255, 0.12),
+    0 22px 42px rgba(0, 0, 0, 0.2);
+}
+
+.spotlight-search__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  color: var(--text-dim);
+}
+
+.spotlight-search__icon svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.spotlight-search input {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  min-width: 0;
+  font-size: 1rem;
+}
+
+.spotlight-search input:focus {
+  border: 0;
+  box-shadow: none;
+}
+
+.spotlight-search__shortcut {
+  display: inline-flex;
+  align-items: center;
+}
+
+.spotlight-search__shortcut kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.045);
+  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.24);
+}
+
 .field-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1040,6 +1114,13 @@ a {
   .scanner-modal,
   .modal {
     padding: 20px;
+  }
+
+  .spotlight-search {
+    grid-template-columns: auto minmax(0, 1fr);
+    min-height: 56px;
+    padding: 0 14px;
+    border-radius: 18px;
   }
 
   .icon-editor {

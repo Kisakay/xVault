@@ -475,21 +475,37 @@ const renderCodesPanel = ({ state, visibleEntries, foldersById }: RenderModel): 
       </article>
       <article class="stat-card card">
         <span class="eyebrow">Shortcuts</span>
-        <strong>${state.isMobile ? 'Tap first' : '/ · N · L'}</strong>
+        <strong>${state.isMobile ? 'Tap first' : 'S · N · L'}</strong>
         <p>${state.isMobile ? 'Core actions stay visible without extra controls.' : 'Search, create, and lock without touching the mouse.'}</p>
       </article>
     </div>
 
     <section class="search-panel card">
       <label class="field field--search">
-        <span>Search vault</span>
-        <input
-          id="vault-search"
-          name="search"
-          type="search"
-          placeholder="Search by issuer, account, or collection"
-          value="${escapeHtml(state.search)}"
-        />
+        <span>Quick search</span>
+        <div class="spotlight-search">
+          <span class="spotlight-search__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="M10.5 4a6.5 6.5 0 1 0 4.03 11.6l4.43 4.44 1.41-1.42-4.43-4.43A6.5 6.5 0 0 0 10.5 4Z" fill="currentColor" />
+            </svg>
+          </span>
+          <input
+            id="vault-search"
+            name="search"
+            type="search"
+            placeholder="Search by issuer, account, or collection"
+            value="${escapeHtml(state.search)}"
+          />
+          ${
+            state.isMobile
+              ? ''
+              : `
+                <span class="spotlight-search__shortcut" aria-hidden="true">
+                  <kbd>S</kbd>
+                </span>
+              `
+          }
+        </div>
       </label>
       <p class="field-hint">
         ${
@@ -717,7 +733,7 @@ const renderVaultScreen = (model: RenderModel): string => {
             <div class="workspace__header-actions">
               ${renderSaveBadge(state)}
               <button class="button button--ghost" data-action="focus-search" type="button" ${state.activePanel !== 'codes' ? 'disabled' : ''}>
-                Focus search
+                Search
               </button>
             </div>
           </header>
