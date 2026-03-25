@@ -457,14 +457,6 @@ const renderCodesPanel = ({ state, visibleEntries, foldersById }: RenderModel): 
   }
         </div>
       </label>
-      <p class="field-hint">
-        ${state.search
-    ? `${visibleEntries.length} result(s) for “${escapeHtml(state.search)}”.`
-    : !state.isMobile && state.activeFolderId
-      ? `Showing only ${escapeHtml(foldersById.get(state.activeFolderId)?.name ?? 'the selected folder')}.`
-      : 'Search remains local to the current screen and never exposes secrets.'
-  }
-      </p>
     </section>
 
     ${state.entries.length === 0
