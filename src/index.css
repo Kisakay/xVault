@@ -447,6 +447,11 @@ a {
   gap: 24px;
 }
 
+.app-shell--mobile {
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
 .sidebar {
   padding: 28px 22px;
   display: grid;
@@ -484,6 +489,34 @@ a {
   background: rgba(98, 215, 187, 0.11);
   border-color: rgba(98, 215, 187, 0.18);
   color: var(--text);
+}
+
+.sidebar--mobile {
+  padding: 18px;
+  gap: 14px;
+}
+
+.sidebar--mobile .brand-lockup {
+  gap: 12px;
+}
+
+.sidebar--mobile .brand-mark {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+}
+
+.sidebar--mobile .sidebar__profile {
+  display: none;
+}
+
+.sidebar--mobile .nav-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.sidebar--mobile .nav-item {
+  text-align: center;
+  padding: 0.8rem 0.45rem;
 }
 
 .sidebar__actions {
@@ -850,7 +883,7 @@ a {
 
 @media (max-width: 720px) {
   .app-frame {
-    padding: 18px;
+    padding: 12px;
   }
 
   .auth-hero,
@@ -868,6 +901,10 @@ a {
   .lock-panel,
   .boot {
     padding: 22px;
+  }
+
+  .screen {
+    min-height: calc(100vh - 24px);
   }
 
   .workspace__header,
@@ -893,6 +930,12 @@ a {
     width: 100%;
   }
 
+  .hero-strip__actions .badge,
+  .workspace__header-actions .badge {
+    width: 100%;
+    justify-content: center;
+  }
+
   .brand-lockup {
     align-items: flex-start;
   }
@@ -903,5 +946,18 @@ a {
 
   .folder-row__actions {
     flex-wrap: wrap;
+  }
+
+  .sidebar--mobile .sidebar__actions {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar--mobile .nav-list {
+    gap: 6px;
+  }
+
+  .scanner-modal,
+  .modal {
+    padding: 20px;
   }
 }

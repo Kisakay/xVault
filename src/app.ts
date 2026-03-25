@@ -81,6 +81,7 @@ const downloadJson = (filename: string, payload: string): void => {
 export class XVaultApp {
   private readonly root: HTMLElement;
   private readonly state: AppState;
+  private readonly mobileMediaQuery = window.matchMedia('(max-width: 720px)');
   private saveTimer: number | null = null;
   private toastTimer: number | null = null;
   private otpRefreshToken = 0;
@@ -91,6 +92,7 @@ export class XVaultApp {
   constructor(root: HTMLElement) {
     this.root = root;
     this.state = createInitialState();
+    this.state.isMobile = this.mobileMediaQuery.matches;
 
     this.root.addEventListener('click', (event) => {
       void this.handleClick(event);
@@ -107,6 +109,9 @@ export class XVaultApp {
     window.addEventListener('keydown', (event) => {
       this.handleKeydown(event);
     });
+    this.mobileMediaQuery.addEventListener('change', (event) => {
+      this.handleMobileModeChange(event.matches);
+    });
 
     window.setInterval(() => {
       void this.handleTick();
@@ -114,6 +119,18 @@ export class XVaultApp {
 
     this.render(false);
     void this.boot();
+  }
+
+  private handleMobileModeChange(isMobile: boolean): void {
+    this.state.isMobile = isMobile;
+
+    if (isMobile) {
+      this.state.activeFolderId = null;
+      this.state.folderModalOpen = false;
+      this.state.editingFolderId = null;
+    }
+
+    this.render(false);
   }
 
   private async boot(): Promise<void> {
@@ -147,7 +164,8 @@ export class XVaultApp {
 
     const visibleEntries = [...this.state.entries]
       .filter((entry) => {
-        const matchesFolder = this.state.activeFolderId === null || entry.folderId === this.state.activeFolderId;
+        const matchesFolder =
+          this.state.isMobile || this.state.activeFolderId === null || entry.folderId === this.state.activeFolderId;
 
         if (!matchesFolder) {
           return false;
@@ -494,6 +512,10 @@ export class XVaultApp {
   }
 
   private openFolderModal(folderId: string | null = null): void {
+    if (this.state.isMobile) {
+      return;
+    }
+
     this.state.folderModalOpen = true;
     this.state.editingFolderId = folderId;
     this.render(false);
@@ -1043,7 +1065,7 @@ export class XVaultApp {
     const rawSecret = readText(formData, 'secret');
     const digits = Number(readText(formData, 'digits') || '6');
     const period = Number(readText(formData, 'period') || '30');
-    const folderId = readText(formData, 'folderId');
+    const folderId = this.state.isMobile ? '' : readText(formData, 'folderId');
 
     try {
       const parsed = source ? parseOtpAuthUri(source) : null;

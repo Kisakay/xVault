@@ -33,6 +33,7 @@ export interface OtpCacheEntry {
 }
 
 export interface AppState {
+  isMobile: boolean;
   screen: Screen;
   authMode: AuthMode;
   activePanel: NavPanel;
@@ -61,6 +62,7 @@ export interface AppState {
 }
 
 export const createInitialState = (): AppState => ({
+  isMobile: false,
   screen: 'booting',
   authMode: 'login',
   activePanel: 'codes',

@@ -364,70 +364,76 @@ const renderCodesPanel = ({ state, visibleEntries, foldersById }: RenderModel): 
         <h2>Copy a code in one click, or add a new account without leaving the vault.</h2>
       </div>
       <div class="hero-strip__actions">
-        <button class="button button--secondary" data-action="open-folder-modal" type="button">New folder</button>
+        ${state.isMobile ? '' : '<button class="button button--secondary" data-action="open-folder-modal" type="button">New folder</button>'}
         <button class="button button--primary" data-action="open-create-entry" type="button">New account</button>
         ${renderSaveBadge(state)}
       </div>
     </div>
 
     <section class="codes-layout">
-      <article class="card panel-card folder-card stack-lg">
-        <div class="panel-heading">
-          <p class="eyebrow">Folders</p>
-          <h2>Filter and maintain your collections.</h2>
-          <p class="supporting-text">Folder actions stay close to the vault instead of hiding in a separate settings area.</p>
-        </div>
-        <div class="folder-list">
-          <button
-            class="folder-row ${state.activeFolderId === null ? 'is-active' : ''}"
-            data-action="set-folder-filter"
-            data-folder-id=""
-            type="button"
-          >
-            <span class="folder-row__main">
-              <span class="folder-row__icon">#</span>
-              <span>All accounts</span>
-            </span>
-            <span class="badge badge--neutral">${state.entries.length}</span>
-          </button>
-          ${
-            state.folders.length === 0
-              ? `
-                <div class="folder-state">
-                  <p>No folders yet. Create one for workspaces, clients, or critical infra.</p>
-                </div>
-              `
-              : state.folders
-                  .slice()
-                  .sort((left, right) => left.name.localeCompare(right.name))
-                  .map((folder) => {
-                    const count = state.entries.filter((entry) => entry.folderId === folder.id).length;
-                    return `
-                      <div class="folder-row-shell">
-                        <button
-                          class="folder-row ${state.activeFolderId === folder.id ? 'is-active' : ''}"
-                          data-action="set-folder-filter"
-                          data-folder-id="${escapeHtml(folder.id)}"
-                          type="button"
-                        >
-                          <span class="folder-row__main">
-                            <span class="folder-row__icon" style="color:${escapeHtml(folder.color)}">${escapeHtml(folder.icon || '•')}</span>
-                            <span>${escapeHtml(folder.name)}</span>
-                          </span>
-                          <span class="badge badge--neutral">${count}</span>
-                        </button>
-                        <div class="folder-row__actions">
-                          <button class="button button--ghost button--sm" data-action="open-folder-edit" data-folder-id="${escapeHtml(folder.id)}" type="button">Edit</button>
-                          <button class="button button--ghost button--danger button--sm" data-action="delete-folder" data-folder-id="${escapeHtml(folder.id)}" type="button">Delete</button>
-                        </div>
+      ${
+        state.isMobile
+          ? ''
+          : `
+            <article class="card panel-card folder-card stack-lg">
+              <div class="panel-heading">
+                <p class="eyebrow">Folders</p>
+                <h2>Filter and maintain your collections.</h2>
+                <p class="supporting-text">Folder actions stay close to the vault instead of hiding in a separate settings area.</p>
+              </div>
+              <div class="folder-list">
+                <button
+                  class="folder-row ${state.activeFolderId === null ? 'is-active' : ''}"
+                  data-action="set-folder-filter"
+                  data-folder-id=""
+                  type="button"
+                >
+                  <span class="folder-row__main">
+                    <span class="folder-row__icon">#</span>
+                    <span>All accounts</span>
+                  </span>
+                  <span class="badge badge--neutral">${state.entries.length}</span>
+                </button>
+                ${
+                  state.folders.length === 0
+                    ? `
+                      <div class="folder-state">
+                        <p>No folders yet. Create one for workspaces, clients, or critical infra.</p>
                       </div>
-                    `;
-                  })
-                  .join('')
-          }
-        </div>
-        <button class="button button--secondary button--block" data-action="open-folder-modal" type="button">Create folder</button>
-      </article>
+                    `
+                    : state.folders
+                        .slice()
+                        .sort((left, right) => left.name.localeCompare(right.name))
+                        .map((folder) => {
+                          const count = state.entries.filter((entry) => entry.folderId === folder.id).length;
+                          return `
+                            <div class="folder-row-shell">
+                              <button
+                                class="folder-row ${state.activeFolderId === folder.id ? 'is-active' : ''}"
+                                data-action="set-folder-filter"
+                                data-folder-id="${escapeHtml(folder.id)}"
+                                type="button"
+                              >
+                                <span class="folder-row__main">
+                                  <span class="folder-row__icon" style="color:${escapeHtml(folder.color)}">${escapeHtml(folder.icon || '•')}</span>
+                                  <span>${escapeHtml(folder.name)}</span>
+                                </span>
+                                <span class="badge badge--neutral">${count}</span>
+                              </button>
+                              <div class="folder-row__actions">
+                                <button class="button button--ghost button--sm" data-action="open-folder-edit" data-folder-id="${escapeHtml(folder.id)}" type="button">Edit</button>
+                                <button class="button button--ghost button--danger button--sm" data-action="delete-folder" data-folder-id="${escapeHtml(folder.id)}" type="button">Delete</button>
+                              </div>
+                            </div>
+                          `;
+                        })
+                        .join('')
+                }
+              </div>
+              <button class="button button--secondary button--block" data-action="open-folder-modal" type="button">Create folder</button>
+            </article>
+          `
+      }
 
       <div class="stack-xl">
     <div class="stats-grid">
@@ -437,14 +443,14 @@ const renderCodesPanel = ({ state, visibleEntries, foldersById }: RenderModel): 
         <p>OTP entries ready for quick access.</p>
       </article>
       <article class="stat-card card">
-        <span class="eyebrow">Collections</span>
-        <strong>${state.folders.length}</strong>
-        <p>Existing groupings are preserved without adding UI noise.</p>
+        <span class="eyebrow">${state.isMobile ? 'Mobile mode' : 'Collections'}</span>
+        <strong>${state.isMobile ? 'Lite' : state.folders.length}</strong>
+        <p>${state.isMobile ? 'Folder management is hidden on phone for a faster, cleaner UI.' : 'Existing groupings are preserved without adding UI noise.'}</p>
       </article>
       <article class="stat-card card">
         <span class="eyebrow">Shortcuts</span>
-        <strong>/ · N · L</strong>
-        <p>Search, create, and lock without touching the mouse.</p>
+        <strong>${state.isMobile ? 'Tap first' : '/ · N · L'}</strong>
+        <p>${state.isMobile ? 'Core actions stay visible without extra controls.' : 'Search, create, and lock without touching the mouse.'}</p>
       </article>
     </div>
 
@@ -463,7 +469,7 @@ const renderCodesPanel = ({ state, visibleEntries, foldersById }: RenderModel): 
         ${
           state.search
             ? `${visibleEntries.length} result(s) for “${escapeHtml(state.search)}”.`
-            : state.activeFolderId
+            : !state.isMobile && state.activeFolderId
               ? `Showing only ${escapeHtml(foldersById.get(state.activeFolderId)?.name ?? 'the selected folder')}.`
               : 'Search remains local to the current screen and never exposes secrets.'
         }
@@ -479,7 +485,7 @@ const renderCodesPanel = ({ state, visibleEntries, foldersById }: RenderModel): 
               <p class="supporting-text">Add a secret manually, paste an otpauth URI, or import an encrypted xVault backup.</p>
               <div class="inline-actions">
               <button class="button button--primary" data-action="open-create-entry" type="button">Add first account</button>
-              <button class="button button--secondary" data-action="open-folder-modal" type="button">Create folder</button>
+              ${state.isMobile ? '' : '<button class="button button--secondary" data-action="open-folder-modal" type="button">Create folder</button>'}
               <button class="button button--ghost" data-action="open-import" type="button">Import backup</button>
               </div>
             </section>
@@ -633,8 +639,8 @@ const renderVaultScreen = (model: RenderModel): string => {
 
   return `
     <main class="screen vault-screen">
-      <div class="app-shell">
-        <aside class="sidebar card">
+      <div class="app-shell ${state.isMobile ? 'app-shell--mobile' : ''}">
+        <aside class="sidebar card ${state.isMobile ? 'sidebar--mobile' : ''}">
           <div class="brand-lockup">
             <div class="brand-mark" aria-hidden="true">
               <span>xV</span>
@@ -664,9 +670,15 @@ const renderVaultScreen = (model: RenderModel): string => {
 
           <div class="sidebar__actions">
             <button class="button button--primary button--block" data-action="open-create-entry" type="button">Add account</button>
-            <button class="button button--secondary button--block" data-action="open-folder-modal" type="button">New folder</button>
-            <button class="button button--secondary button--block" data-action="lock-vault" type="button">Lock</button>
-            <button class="button button--ghost button--block" data-action="logout" type="button">Sign out</button>
+            ${
+              state.isMobile
+                ? ''
+                : `
+                  <button class="button button--secondary button--block" data-action="open-folder-modal" type="button">New folder</button>
+                  <button class="button button--secondary button--block" data-action="lock-vault" type="button">Lock</button>
+                  <button class="button button--ghost button--block" data-action="logout" type="button">Sign out</button>
+                `
+            }
           </div>
         </aside>
 
@@ -723,15 +735,21 @@ const renderVaultScreen = (model: RenderModel): string => {
                         <div class="inline-actions">
                           <button class="button button--secondary" data-action="open-qr-scanner" type="button">Scan QR code</button>
                         </div>
-                        <label class="field">
-                          <span>Collection</span>
-                          <select id="entry-folder" name="folderId">
-                            <option value="" ${entryEditor.folderId === null ? 'selected' : ''}>Ungrouped</option>
-                            ${renderFolderOptionList(state.folders, entryEditor.folderId)}
-                          </select>
-                        </label>
+                        ${
+                          state.isMobile
+                            ? ''
+                            : `
+                              <label class="field">
+                                <span>Collection</span>
+                                <select id="entry-folder" name="folderId">
+                                  <option value="" ${entryEditor.folderId === null ? 'selected' : ''}>Ungrouped</option>
+                                  ${renderFolderOptionList(state.folders, entryEditor.folderId)}
+                                </select>
+                              </label>
+                            `
+                        }
                         <p class="field-hint">
-                          Keep creation fast: just a name and a secret. If you paste a full <code>otpauth://</code> URI in the secret field, xVault will parse it automatically.
+                          ${state.isMobile ? 'Mobile mode keeps creation intentionally minimal: name, secret, scan, done.' : 'Keep creation fast: just a name and a secret. If you paste a full <code>otpauth://</code> URI in the secret field, xVault will parse it automatically.'}
                         </p>
                       `
                       : `
@@ -758,7 +776,7 @@ const renderVaultScreen = (model: RenderModel): string => {
                           <span>Base32 secret</span>
                           <input id="entry-secret" name="secret" type="text" placeholder="JBSWY3DPEHPK3PXP" value="${escapeHtml(entryEditor.secret)}" />
                         </label>
-                        <div class="field-grid">
+                        <div class="field-grid ${state.isMobile ? 'field-grid--two' : ''}">
                           <label class="field">
                             <span>Digits</span>
                             <select id="entry-digits" name="digits">
@@ -773,16 +791,22 @@ const renderVaultScreen = (model: RenderModel): string => {
                               <option value="60" ${entryEditor.period === 60 ? 'selected' : ''}>60 seconds</option>
                             </select>
                           </label>
-                          <label class="field">
-                            <span>Collection</span>
-                            <select id="entry-folder" name="folderId">
-                              <option value="" ${entryEditor.folderId === null ? 'selected' : ''}>Ungrouped</option>
-                              ${renderFolderOptionList(state.folders, entryEditor.folderId)}
-                            </select>
-                          </label>
+                          ${
+                            state.isMobile
+                              ? ''
+                              : `
+                                <label class="field">
+                                  <span>Collection</span>
+                                  <select id="entry-folder" name="folderId">
+                                    <option value="" ${entryEditor.folderId === null ? 'selected' : ''}>Ungrouped</option>
+                                    ${renderFolderOptionList(state.folders, entryEditor.folderId)}
+                                  </select>
+                                </label>
+                              `
+                          }
                         </div>
                         <p class="field-hint">
-                          Use edit mode when you need to correct issuer, digits, refresh period, or reclassify an existing OTP entry.
+                          ${state.isMobile ? 'Mobile mode keeps editing focused on the OTP itself.' : 'Use edit mode when you need to correct issuer, digits, refresh period, or reclassify an existing OTP entry.'}
                         </p>
                       `
                   }
@@ -798,7 +822,7 @@ const renderVaultScreen = (model: RenderModel): string => {
       }
 
       ${
-        state.folderModalOpen
+        !state.isMobile && state.folderModalOpen
           ? `
             <div class="modal-overlay" role="presentation">
               <section class="modal modal--narrow card" role="dialog" aria-modal="true" aria-labelledby="folder-modal-title">
