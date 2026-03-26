@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "server": "bun --cwd server run dev",
+    "server": "cd server && bun run start",
     "server:start": "bun --cwd server run start",
     "dev:all": "concurrently \"npm run server\" \"npm run dev\"",
     "start": "bun run server:start",
