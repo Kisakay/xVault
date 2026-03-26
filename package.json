@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "vite",
     "server": "cd server && bun run start",
-    "server:start": "bun --cwd server run start",
     "dev:all": "concurrently \"npm run server\" \"npm run dev\"",
     "start": "bun run server:start",
     "build": "vite build",
