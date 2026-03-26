@@ -1,14 +1,16 @@
-FROM node:18-alpine
+FROM oven/bun:1
 
 WORKDIR /app
 
-# Copy package.json files for both client and server
-COPY package*.json ./
-COPY server/package*.json ./server/
+# Copy package manifests first for better layer caching
+COPY package.json bun.lock ./
+RUN bun install
 
-# Install dependencies
-RUN npm install
-RUN cd server && npm install
+COPY server/package.json server/bun.lock ./server/
+WORKDIR /app/server
+RUN bun install
+
+WORKDIR /app
 
 # Copy the rest of the application
 COPY . .
@@ -18,10 +20,10 @@ COPY config.json ./config.json.original
 RUN echo '{"SERVER_HOST": "0.0.0.0", "SERVER_PORT": 3001, "SERVER_URL": "http://localhost:3001"}' > config.json
 
 # Build the React application
-RUN npm run build
+RUN bun run build
 
 # Expose the port the server runs on
 EXPOSE 3001
 
 # Start the application (server only, not client)
-CMD ["npm", "run", "server"]
+CMD ["bun", "run", "start"]
