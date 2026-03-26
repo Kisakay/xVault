@@ -1,5 +1,5 @@
 {
-  "name": "xVault-server",
+  "name": "xvault-server",
   "version": "1.0.0",
   "description": "Server for xVault application",
   "main": "server.js",
