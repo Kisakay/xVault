@@ -7,14 +7,14 @@ services:
       dockerfile: Dockerfile
     container_name: xVault
     ports:
-      - "3001:3001"
+      - "58951:58951"
     volumes:
       - xVault_data:/app/server
     environment:
       - NODE_ENV=production
       - SERVER_HOST=0.0.0.0
-      - SERVER_PORT=3001
-      - SERVER_URL=http://localhost:3001
+      - SERVER_PORT=58951
+      - SERVER_URL=http://localhost:58951
     restart: unless-stopped
     # network_mode: "host" # Ne fonctionne pas correctement sur macOS
 

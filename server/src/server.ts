@@ -52,8 +52,8 @@ const DIST_DIR = join(import.meta.dir, "..", "..", "dist");
 const CONFIG_PATH = join(import.meta.dir, "..", "..", "config.json");
 const DEFAULT_CONFIG: ServerConfig = {
   SERVER_HOST: "localhost",
-  SERVER_PORT: 3001,
-  SERVER_URL: "http://localhost:3001",
+  SERVER_PORT: 58951,
+  SERVER_URL: "http://localhost:58951",
 };
 
 const failedLoginAttempts = new Map<string, FailedLoginState>();

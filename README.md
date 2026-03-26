@@ -64,8 +64,8 @@ Edit `config.json` with your settings:
 ```json
 {
   "SERVER_HOST": "localhost",
-  "SERVER_PORT": 3001,
-  "SERVER_URL": "http://localhost:3001"
+  "SERVER_PORT": 58951,
+  "SERVER_URL": "http://localhost:58951"
 }
 ```
 
@@ -81,7 +81,7 @@ npm start
 
 This starts:
 - **Client** (Vite dev server) on `http://localhost:5173`
-- **Server** (Express API) on `http://localhost:3001`
+- **Server** (Express API) on `http://localhost:58951`
 
 ### Start services individually
 
@@ -180,14 +180,14 @@ docker build -t xvault .
 
 # Run the container
 docker run -d \
-  -p 3001:3001 \
+  -p 58951:58951 \
   -v xvault_data:/app/server \
   --name xvault \
   --restart unless-stopped \
   xvault
 ```
 
-The server will be available at `http://localhost:3001` (or your configured domain).
+The server will be available at `http://localhost:58951` (or your configured domain).
 
 ### Option 3: Systemd Service
 
@@ -246,7 +246,7 @@ server {
     add_header X-XSS-Protection "1; mode=block" always;
     
     location / {
-        proxy_pass http://localhost:3001;
+        proxy_pass http://localhost:58951;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -309,7 +309,7 @@ Edit `config.json` in the root directory:
 ```json
 {
   "SERVER_HOST": "0.0.0.0",
-  "SERVER_PORT": 3001,
+  "SERVER_PORT": 58951,
   "SERVER_URL": "https://your-domain.com"
 }
 ```
@@ -324,7 +324,7 @@ The server can also be configured using environment variables:
 
 ```bash
 export SERVER_HOST=0.0.0.0
-export SERVER_PORT=3001
+export SERVER_PORT=58951
 export SERVER_URL=https://your-domain.com
 export NODE_ENV=production
 ```
@@ -333,9 +333,9 @@ export NODE_ENV=production
 
 ### Port Already in Use
 
-If port 3001 is already in use, either:
+If port 58951 is already in use, either:
 - Change the port in `config.json`
-- Stop the process using the port: `lsof -ti:3001 | xargs kill`
+- Stop the process using the port: `lsof -ti:58951 | xargs kill`
 
 ### Database Issues
 
