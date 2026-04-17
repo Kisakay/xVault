@@ -7,7 +7,7 @@
     "dev": "vite",
     "server": "cd server && bun run start",
     "dev:all": "concurrently \"npm run server\" \"npm run dev\"",
-    "start": "bun run server:start",
+    "start": "bun run server",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
