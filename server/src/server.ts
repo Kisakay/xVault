@@ -51,7 +51,7 @@ const DEFAULT_RESET_TIME_MS = 30 * 60 * 1000;
 const DIST_DIR = join(import.meta.dir, "..", "..", "dist");
 const CONFIG_PATH = join(import.meta.dir, "..", "..", "config.json");
 const DEFAULT_CONFIG: ServerConfig = {
-  SERVER_HOST: "localhost",
+  SERVER_HOST: "127.0.0.1",
   SERVER_PORT: 58951,
   SERVER_URL: "http://localhost:58951",
 };
