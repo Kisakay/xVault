@@ -41,6 +41,8 @@
     >
       <md-outlined-text-field
         label="Password"
+        name="password"
+        id="unlock-password"
         type={showPassword ? 'text' : 'password'}
         autocomplete="current-password"
         value={password}

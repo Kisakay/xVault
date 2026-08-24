@@ -1,0 +1,47 @@
+# xVault — systemd service unit
+#
+# Installation :
+#   sudo cp deploy/xvault.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now xvault
+#
+# Logs : sudo journalctl -u xvault -f
+#
+# Adaptation :
+#   - Remplace `User`/`Group` par ton utilisateur, ou crée un utilisateur
+#     dédié : sudo useradd --system --home /srv/xvault --shell /usr/sbin/nologin xvault
+#   - Ajuste SERVER_HOST/PORT/URL dans /srv/xvault/config.json (gitignoré).
+
+[Unit]
+Description=xVault 2FA Manager
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+
+# Utilisateur d'exécution — adapte à ton système
+User=root
+Group=root
+# Exemple avec utilisateur dédié :
+# User=xvault
+# Group=xvault
+
+# Répertoire de travail : le binaire y lit config.json, sert ./dist
+# et stocke la base SQLite dans ./data/xVault.sqlite
+WorkingDirectory=/srv/xvault
+
+ExecStart=/srv/xvault/backend/target/release/xvault
+
+Restart=on-failure
+RestartSec=5
+
+# Sécurité de base
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/srv/xvault/data
+
+[Install]
+WantedBy=multi-user.target

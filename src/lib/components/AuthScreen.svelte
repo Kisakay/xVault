@@ -85,6 +85,8 @@
         {#if app.authMode === 'login'}
           <md-outlined-text-field
             label="Login ID"
+            name="loginId"
+            id="auth-login-id"
             type="text"
             autocomplete="username"
             placeholder="e.g. A7cK2xQp"
@@ -96,6 +98,8 @@
 
         <md-outlined-text-field
           label={app.authMode === 'register' ? 'Encryption password' : 'Password'}
+          name="password"
+          id="auth-password"
           type={showPassword ? 'text' : 'password'}
           autocomplete={app.authMode === 'register' ? 'new-password' : 'current-password'}
           placeholder={app.authMode === 'register' ? 'At least 8 characters' : 'Enter your password'}
