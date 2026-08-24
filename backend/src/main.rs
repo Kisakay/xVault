@@ -59,9 +59,6 @@ async fn main() {
     let app = handlers::build_router(state);
     let address = format!("{}:{}", config.server_host, config.server_port);
 
-    println!("xVault backend listening on http://{address}");
-    println!("Serving static assets from ./dist");
-
     let listener = match TcpListener::bind(&address).await {
         Ok(listener) => listener,
         Err(err) => {
@@ -69,6 +66,12 @@ async fn main() {
             std::process::exit(1);
         }
     };
+
+    match listener.local_addr() {
+        Ok(addr) => println!("xVault backend listening on http://{addr}"),
+        Err(_) => println!("xVault backend listening on http://{address}"),
+    }
+    println!("Serving static assets from ./dist");
 
     if let Err(err) = axum::serve(listener, app).await {
         eprintln!("Server error: {err}");
