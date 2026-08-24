@@ -1,38 +1,45 @@
-# xVault Front-End Rebuild
+# xVault Rebuild — Svelte + Material Design 3 + Rust
 
 ## 1. Quick audit
 
-The previous front-end had the usual symptoms of a React app that grew without a clear product shell:
+The previous front-end had the usual symptoms of a React app that grew without a
+clear product shell:
 
 - UI logic, data logic, auth logic, and presentation were mixed inside components.
 - Too much state lived in React context, which made behavior implicit and harder to test.
 - Tailwind-heavy markup obscured intent and made every component feel like a one-off.
 - Core OTP actions were visually buried under decorative UI rather than optimized for speed.
-- Accessibility and trust cues were inconsistent: noisy gradients, weak hierarchy, and unclear lock/save states.
+- Accessibility and trust cues were inconsistent: noisy gradients, weak hierarchy,
+  and unclear lock/save states.
 - The architecture encouraged local patches, not long-term maintainability.
 
-## 2. Recommended stack
+## 2. Chosen stack (v2)
 
-### Chosen stack
+### Frontend
 
-- `Vite`
-- `TypeScript`
-- Native DOM rendering with a small state controller
-- Custom CSS design system
-- Existing xVault API/backend unchanged
+- `Svelte 5` (runes) + `TypeScript` + `Vite`
+- `@material/web` — Google's official Material Design 3 Web Components
+- Custom MD3 theme tokens (dark-first, mint/cyan xVault palette, light theme included)
+- `jsQR` for QR scanning, Web Crypto for TOTP (no crypto-js on the client)
 
-### Why this is better than keeping React here
+### Backend
 
-- The product scope is small and stateful, not component-complex.
-- OTP vault UX benefits more from directness and clarity than from a framework-heavy abstraction layer.
-- Native TypeScript keeps the mental model simple: one controller, one render model, one source of truth.
-- Fewer dependencies reduce bundle weight, attack surface, and maintenance cost.
-- The code becomes easier to onboard into because behavior is explicit, not hidden behind hooks/context chains.
+- `Rust` + `Axum` (tokio) + `rusqlite` (SQLite bundled — no system dependency)
+- AES-256-CBC in the CryptoJS/OpenSSL `Salted__` format: fully compatible with
+  vaults created by the legacy Bun/Express backend (verified by cross-tests
+  against `crypto-js` in both directions)
+- Same SQLite schema, same API routes and response shapes
 
-### Alternatives considered
+### Why this is better
 
-- `Vue` or `Svelte` would also be valid choices for a greenfield rebuild.
-- For this repo specifically, native TypeScript was the strongest fit because it avoids new framework debt while still delivering a fully fresh front-end.
+- The product scope is small and stateful, not component-complex: Svelte runes
+  keep the mental model simple (one reactive store, no context chains).
+- Material Web Components give a consistent, accessible, spec-compliant MD3 UI
+  with zero UI-framework lock-in.
+- Rust replaces the Node/Bun runtime: single static binary, tiny memory
+  footprint, no runtime dependencies in production.
+- Existing users keep their data: same database file, same password hashes,
+  same encrypted payload format.
 
 ## 3. UX strategy
 
@@ -41,96 +48,88 @@ The previous front-end had the usual symptoms of a React app that grew without a
 1. Sign in or create vault.
 2. Unlock the encrypted vault with the password.
 3. Search and copy OTP codes immediately.
-4. Add a new OTP entry with either a Base32 secret or an `otpauth://` URI.
+4. Add a new OTP entry with either a Base32 secret, an `otpauth://` URI, or a QR scan.
 5. Export or import encrypted backups.
 6. Rotate password, rename vault, lock session, or delete account.
 
 ### Information architecture
 
-- `Codes`
-- `Backup`
-- `Security`
-
-This keeps the interface product-shaped:
-
-- Daily use lives in `Codes`.
-- Resilience and continuity live in `Backup`.
-- Sensitive account controls live in `Security`.
+- `Codes` — daily use (search, folder filter, OTP grid, copy on click)
+- `Backup` — encrypted export/import
+- `Security` — profile, password rotation, delete account
+- `Info` — vault stats and shortcuts
 
 ## 4. Design system
 
-### Visual direction
+- MD3 tokens (`--md-sys-color-*`) customized for the xVault brand:
+  - Background: deep blue-black (`#0d1419`), surfaces in tonal containers
+  - Primary: mint (`#7fd9b8` dark / `#006b4f` light)
+  - Secondary: cold blue-slate, Tertiary: soft cyan, Error: muted red
+- Typography: Roboto + Roboto Mono (codes)
+- Components from `@material/web`: buttons, text fields, selects, dialogs,
+  progress, FAB, tabs, bottom navigation; custom MD3-styled sidebar, cards,
+  snackbar, and OTP countdown.
 
-- Dark-first
-- High-contrast typography
-- Cyan / mint accent palette for trust and freshness
-- Subtle atmospheric background, not generic flat dark mode
-- Rounded but restrained surfaces to feel secure, not playful
-
-### Tokens
-
-- Background: deep blue-black
-- Surface: glassy slate panels
-- Accent: mint
-- Secondary accent: cold blue
-- Danger: muted red
-- Typeface: `IBM Plex Sans` + `IBM Plex Mono`
-
-### Component set
-
-- Primary / secondary / ghost / danger buttons
-- Cards
-- Status badges
-- Search field
-- OTP card
-- Modal form
-- Notice banners
-- Toasts
-
-## 5. Front-end architecture
+## 5. Frontend architecture
 
 ### Principles
 
-- One app controller owns state and side effects.
-- Pure template rendering lives outside the controller.
+- One reactive store (`src/lib/store.svelte.ts`) owns state and side effects.
+- Components are presentational and read/write the store via runes.
 - Derived data is computed from state, not duplicated.
-- OTP updates are incremental and cached by refresh bucket.
-- Autosave is debounced and explicit.
+- OTP generation is per-card, cached by time bucket, refreshed every 500 ms.
+- Autosave is debounced (280 ms) with an explicit save status indicator.
 
 ### File structure
 
 ```text
 src/
-  app.ts
-  app-state.ts
-  main.ts
-  otpauth.ts
-  templates.ts
-  index.css
-  types/
-  utils/
+  App.svelte                 — screen router (booting/auth/locked/vault)
+  main.ts                    — MD3 component registration + mount
+  app.css                    — MD3 theme tokens (light/dark) + base styles
+  lib/
+    types.ts
+    api.ts                   — typed REST client (credentials: include)
+    otpauth.ts               — otpauth:// URI parsing
+    totp.ts                  — RFC 6238 TOTP with Web Crypto
+    store.svelte.ts          — app state + actions (auth, vault, save, panels)
+    md3.d.ts                 — custom element types for svelte-check
+    components/
+      AuthScreen.svelte      — sign in / create vault
+      LockedScreen.svelte    — unlock with password
+      VaultScreen.svelte     — shell: sidebar, topbar, bottom nav, shortcuts
+      CodesPanel.svelte      — search + folder filter + OTP grid
+      EntryCard.svelte       — live TOTP, countdown, copy on click
+      EntryDialog.svelte     — create/edit entry + QR scanner
+      FolderDialog.svelte
+      ConfirmDialog.svelte
+      QrScanner.svelte       — getUserMedia + jsQR
+      BackupPanel.svelte     — export/import
+      SecurityPanel.svelte   — profile / password / delete account
+      InfoPanel.svelte
+      Snackbar.svelte        — custom MD3 snackbar
 ```
 
-### State management
+### Backend structure
 
-- Single in-memory state object
-- Explicit pending flags per flow
-- Debounced encrypted save
-- OTP cache keyed by entry ID and time bucket
+```text
+backend/
+  Cargo.toml
+  src/
+    main.rs     — entry point, config, DB init, cleanup task
+    config.rs   — config.json + env overrides, DB path, legacy migration
+    crypto.rs   — EVP_BytesToKey (MD5) + AES-256-CBC + SHA-256 (CryptoJS-compatible)
+    db.rs       — rusqlite schema + CRUD (legacy-compatible)
+    session.rs  — in-memory sessions + failed-login guard
+    handlers.rs — Axum routes, CORS, static SPA serving
+```
 
 ## 6. Performance and security notes
 
-- No React runtime cost for this UI layer
-- No client-side rendering abstraction overhead
-- OTP values are only copied on direct user action
-- Secrets are not rendered outside the add form
-- Export/import flows preserve encrypted backup format
-- Visual save status makes persistence state legible
-
-## 7. Developer experience
-
-- Small number of files
-- Clear module boundaries
-- CSS is tokenized instead of utility-spammed
-- Product logic is readable without tracing hooks across the tree
-- Easy to extend with focused panels or additional native dialogs later
+- Single static Rust binary; SQLite bundled (no CGO/system dependency).
+- No React runtime cost for this UI layer.
+- OTP values are only copied on direct user action.
+- Secrets are not rendered outside the add form.
+- Export/import flows preserve the encrypted backup format (`xVault-V2`).
+- Visual save status makes persistence state legible.
+- Rate-limited login (5 attempts / 30 min lockout), HttpOnly session cookie.

@@ -62,7 +62,9 @@ export const deriveEntryName = (accountName: string, issuer: string): string => 
   return cleanAccountName || cleanIssuer;
 };
 
-export const splitEntryName = (name: string): { title: string; subtitle: string | null } => {
+export const splitEntryName = (
+  name: string,
+): { title: string; subtitle: string | null } => {
   const [head, ...tail] = name.split(':');
   const subtitle = tail.join(':').trim();
 

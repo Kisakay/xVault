@@ -1,29 +1,36 @@
-FROM oven/bun:1
+# ---- Stage 1 : build du frontend Svelte --------------------------------
+FROM node:22-alpine AS frontend
+WORKDIR /build
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY index.html svelte.config.js tsconfig.json vite.config.ts ./
+COPY src ./src
+RUN npm run build
 
+# ---- Stage 2 : build du backend Rust (axum + rusqlite bundled) ----------
+FROM rust:1-alpine AS backend
+WORKDIR /build
+# rust:alpine inclut gcc/musl-dev, requis pour compiler SQLite bundled.
+COPY backend/Cargo.toml backend/Cargo.lock ./
+COPY backend/src ./src
+RUN cargo build --release --locked
+
+# ---- Stage 3 : runtime minimal ------------------------------------------
+FROM alpine:3.21
 WORKDIR /app
 
-# Copy package manifests first for better layer caching
-COPY package.json bun.lock ./
-RUN bun install
+RUN adduser -D -u 10001 xvault
 
-COPY server/package.json server/bun.lock ./server/
-WORKDIR /app/server
-RUN bun install
+COPY --from=frontend /build/dist ./dist
+COPY --from=backend /build/target/release/xvault ./xvault
 
-WORKDIR /app
-
-# Copy the rest of the application
-COPY . .
-
-# Override config.json to ensure server binds to all interfaces
-COPY config.json ./config.json.original
+# Surcharge config.json pour binder sur toutes les interfaces dans Docker.
 RUN echo '{"SERVER_HOST": "0.0.0.0", "SERVER_PORT": 58951, "SERVER_URL": "http://localhost:58951"}' > config.json
 
-# Build the React application
-RUN bun run build
+RUN mkdir -p /app/data && chown -R xvault:xvault /app
 
-# Expose the port the server runs on
+USER xvault
 EXPOSE 58951
 
-# Start the application (server only, not client)
-CMD ["bun", "run", "start"]
+ENV XVAULT_DB_PATH=/app/data/xVault.sqlite
+CMD ["./xvault"]

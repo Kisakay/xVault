@@ -8,28 +8,29 @@ A lightweight and secure two-factor authentication (2FA) token manager.
 
 ## Overview
 
-xVault is a self-hosted 2FA token manager that stores TOTP codes securely with AES encryption. It features a clean, minimalist interface and runs locally for maximum security.
+xVault is a self-hosted 2FA token manager that stores TOTP codes securely with AES encryption. It features a clean Material Design 3 interface and runs locally for maximum security.
 
 ## Features
 
-- **🔐 Secure Storage** — AES-encrypted vault with password protection
+- **🔐 Secure Storage** — AES-encrypted vault with password protection (CryptoJS-compatible format)
 - **⚡ Auto-Generation** — Time-based codes refresh every 30 seconds
 - **📱 QR Code Scanner** — Quickly add accounts by scanning QR codes
 - **📦 Export/Import** — Encrypted backup and restore functionality
-- **🎨 Modern UI** — Clean, responsive interface with dark mode support
+- **🎨 Modern UI** — Material Design 3 (Svelte 5 + Material Web Components), dark/light themes
 - **🔒 Local First** — Self-hosted for complete data control
 - **📁 Organization** — Organize entries with folders and custom icons
 
 ## Tech Stack
 
-- **Frontend:** React 18 + TypeScript + Vite + Tailwind CSS
-- **Backend:** Express.js + SQLite
-- **Encryption:** AES (CryptoJS)
+- **Frontend:** Svelte 5 + TypeScript + Vite + Material Web Components (MD3)
+- **Backend:** Rust (Axum) + SQLite (rusqlite, bundled)
+- **Encryption:** AES-256-CBC (OpenSSL/CryptoJS "Salted__" format)
 - **Authentication:** Session-based with login ID system
 
 ## Prerequisites
 
-- **Node.js** v18 or higher
+- **Node.js** v20 or higher (frontend build)
+- **Rust** toolchain (cargo) v1.75 or higher (backend)
 - **npm** v9 or higher (or compatible package manager)
 
 ## Installation
@@ -44,11 +45,11 @@ cd xVault
 ### 2. Install dependencies
 
 ```bash
-# Install client dependencies
+# Frontend dependencies
 npm install
 
-# Install server dependencies
-cd server && npm install && cd ..
+# Backend dependencies (compiles the Rust binary)
+npm run backend:build
 ```
 
 ### 3. Configure the application
@@ -76,12 +77,12 @@ For production, update `SERVER_URL` to match your domain.
 ### Start both client and server
 
 ```bash
-npm start
+npm run dev:all
 ```
 
 This starts:
 - **Client** (Vite dev server) on `http://localhost:5173`
-- **Server** (Express API) on `http://localhost:58951`
+- **Server** (Rust API) on the port from `config.json`
 
 ### Start services individually
 
@@ -96,10 +97,10 @@ npm run server
 ### Build for production
 
 ```bash
-npm run build
+npm run prod
 ```
 
-The built files will be in the `dist/` directory, which the server serves in production mode.
+This builds the Svelte frontend into `dist/` and compiles the Rust backend to `backend/target/release/xvault`. The backend serves the `dist/` assets itself.
 
 ## Usage
 
@@ -112,7 +113,7 @@ The built files will be in the `dist/` directory, which the server serves in pro
 
 ### Adding TOTP Entries
 
-1. Click the **Add** button
+1. Click the **Add account** button
 2. Scan a QR code or enter the secret key manually
 3. Name the service and (optionally) add a custom icon
 4. Organize entries into folders for better management
@@ -125,36 +126,29 @@ TOTP codes are automatically generated and refresh every 30 seconds. Click on an
 ### Backup & Restore
 
 **Export:**
-1. Navigate to **Settings**
-2. Select **Export Vault**
-3. Enter your password to confirm
-4. Save the encrypted JSON file securely
+1. Navigate to **Backup**
+2. Select **Export xVault backup**
+3. Save the encrypted JSON file securely
 
 **Import:**
-1. Navigate to **Settings**
-2. Select **Import Vault**
+1. Navigate to **Backup**
+2. Select **Import encrypted backup**
 3. Choose your exported file
-4. Enter your password to decrypt and import
+4. The vault is decrypted and replaced with the backup content
 
 ## Production Deployment
 
-### Option 1: PM2 (Recommended)
+### Option 1: PM2
 
 ```bash
-# Install PM2 globally
-npm install -g pm2
-
 # Build the application
-npm run build
+npm run prod
 
 # Start with PM2 using ecosystem config
 pm2 start pm2.config.cjs
 
 # Save PM2 process list
 pm2 save
-
-# Setup PM2 to start on system boot
-pm2 startup
 ```
 
 ### Option 2: Docker
@@ -163,13 +157,13 @@ pm2 startup
 
 ```bash
 # Build and start
-docker-compose up -d
+docker compose up -d
 
 # View logs
-docker-compose logs -f
+docker compose logs -f
 
 # Stop
-docker-compose down
+docker compose down
 ```
 
 **Using Docker directly:**
@@ -181,7 +175,7 @@ docker build -t xvault .
 # Run the container
 docker run -d \
   -p 58951:58951 \
-  -v xvault_data:/app/server \
+  -v xvault_data:/app/data \
   --name xvault \
   --restart unless-stopped \
   xvault
@@ -202,7 +196,7 @@ After=network.target
 Type=simple
 User=your-user
 WorkingDirectory=/path/to/xVault
-ExecStart=/usr/bin/node server/server.js
+ExecStart=/path/to/xVault/backend/target/release/xvault
 Restart=always
 RestartSec=10
 Environment=NODE_ENV=production
@@ -216,88 +210,6 @@ Enable and start the service:
 ```bash
 sudo systemctl enable xvault
 sudo systemctl start xvault
-```
-
-## Security
-
-### Best Practices
-
-- **Use HTTPS** — Always use HTTPS in production (configure reverse proxy with Nginx + Let's Encrypt)
-- **Strong Password** — Use a unique, complex password for your vault
-- **Local Access** — Run locally or access via VPN; avoid exposing to the internet
-- **Regular Backups** — Back up `server/xVault.sqlite` frequently
-- **Keep Updated** — Regularly update dependencies and the application
-
-### Nginx Reverse Proxy
-
-Example Nginx configuration with HTTPS:
-
-```nginx
-server {
-    listen 443 ssl http2;
-    server_name your-domain.com;
-    
-    ssl_certificate /path/to/fullchain.pem;
-    ssl_certificate_key /path/to/privkey.pem;
-    
-    # Security headers
-    add_header X-Frame-Options "SAMEORIGIN" always;
-    add_header X-Content-Type-Options "nosniff" always;
-    add_header X-XSS-Protection "1; mode=block" always;
-    
-    location / {
-        proxy_pass http://localhost:58951;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-
-# Redirect HTTP to HTTPS
-server {
-    listen 80;
-    server_name your-domain.com;
-    return 301 https://$server_name$request_uri;
-}
-```
-
-## Backup and Restore
-
-### Manual Backup
-
-The critical file is `server/xVault.sqlite` which contains all encrypted data:
-
-```bash
-# Backup the database
-cp server/xVault.sqlite /path/to/backup/xVault-$(date +%Y%m%d).sqlite
-
-# Restore from backup
-cp /path/to/backup/xVault-YYYYMMDD.sqlite server/xVault.sqlite
-```
-
-### Automated Backup Script
-
-Create a backup script (`backup.sh`):
-
-```bash
-#!/bin/bash
-BACKUP_DIR="/path/to/backups"
-DATE=$(date +%Y%m%d-%H%M%S)
-cp server/xVault.sqlite "$BACKUP_DIR/xVault-$DATE.sqlite"
-
-# Keep only last 30 days of backups
-find "$BACKUP_DIR" -name "xVault-*.sqlite" -mtime +30 -delete
-```
-
-Add to crontab for daily backups:
-
-```bash
-0 2 * * * /path/to/backup.sh
 ```
 
 ## Configuration
@@ -320,36 +232,130 @@ Edit `config.json` in the root directory:
 
 ### Environment Variables
 
-The server can also be configured using environment variables:
+| Variable | Description | Default |
+| --- | --- | --- |
+| `SERVER_HOST` | Host to bind to | from `config.json` |
+| `SERVER_PORT` | Port to listen on | from `config.json` |
+| `SERVER_URL` | Public server URL | from `config.json` |
+| `XVAULT_DB_PATH` | SQLite database path | `./data/xVault.sqlite` |
+| `XVAULT_DIST_DIR` | Static assets directory | `./dist` |
+| `XVAULT_CONFIG_PATH` | Config file path | `./config.json` |
+
+## Upgrading from the legacy (Bun/Express) backend
+
+The Rust backend keeps full compatibility with the legacy format:
+
+- **Database:** the schema is identical. On first start, if `data/xVault.sqlite`
+  does not exist but the legacy `server/xVault.sqlite` file does, it is copied
+  automatically.
+- **Encryption:** vaults are still encrypted with AES-256-CBC in the
+  CryptoJS/OpenSSL `Salted__` format, and password hashes use the same
+  SHA-256 derivation — existing passwords keep working.
+- **API:** all routes and response shapes are unchanged.
+
+## Backup and Restore
+
+### Manual Backup
+
+The critical file is `data/xVault.sqlite` which contains all encrypted data:
 
 ```bash
-export SERVER_HOST=0.0.0.0
-export SERVER_PORT=58951
-export SERVER_URL=https://your-domain.com
-export NODE_ENV=production
+# Backup the database
+cp data/xVault.sqlite /path/to/backup/xVault-$(date +%Y%m%d).sqlite
+
+# Restore from backup
+cp /path/to/backup/xVault-YYYYMMDD.sqlite data/xVault.sqlite
+```
+
+### Automated Backup Script
+
+Create a backup script (`backup.sh`):
+
+```bash
+#!/bin/bash
+BACKUP_DIR="/path/to/backups"
+DATE=$(date +%Y%m%d-%H%M%S)
+cp data/xVault.sqlite "$BACKUP_DIR/xVault-$DATE.sqlite"
+
+# Keep only last 30 days of backups
+find "$BACKUP_DIR" -name "xVault-*.sqlite" -mtime +30 -delete
+```
+
+Add to crontab for daily backups:
+
+```bash
+0 2 * * * /path/to/backup.sh
+```
+
+## Security
+
+### Best Practices
+
+- **Use HTTPS** — Always use HTTPS in production (configure reverse proxy with Nginx + Let's Encrypt)
+- **Strong Password** — Use a unique, complex password for your vault
+- **Local Access** — Run locally or access via VPN; avoid exposing to the internet
+- **Regular Backups** — Back up `data/xVault.sqlite` frequently
+- **Keep Updated** — Regularly update dependencies and the application
+
+### Nginx Reverse Proxy
+
+Example Nginx configuration with HTTPS:
+
+```nginx
+server {
+    listen 443 ssl http2;
+    server_name your-domain.com;
+
+    ssl_certificate /path/to/fullchain.pem;
+    ssl_certificate_key /path/to/privkey.pem;
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+
+    location / {
+        proxy_pass http://localhost:58951;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+
+# Redirect HTTP to HTTPS
+server {
+    listen 80;
+    server_name your-domain.com;
+    return 301 https://$server_name$request_uri;
+}
 ```
 
 ## Troubleshooting
 
 ### Port Already in Use
 
-If port 58951 is already in use, either:
+If the configured port is already in use, either:
 - Change the port in `config.json`
 - Stop the process using the port: `lsof -ti:58951 | xargs kill`
 
 ### Database Issues
 
 If you encounter database errors:
-- Check file permissions on `server/xVault.sqlite`
-- Ensure the `server/` directory is writable
-- Verify SQLite3 is properly installed
+- Check file permissions on `data/xVault.sqlite`
+- Ensure the `data/` directory is writable
+- SQLite is bundled with the Rust binary — no system dependency required
 
 ### Build Issues
 
 If the build fails:
 - Clear `node_modules` and reinstall: `rm -rf node_modules && npm install`
-- Clear Vite cache: `rm -rf node_modules/.vite`
-- Check Node.js version: `node --version` (should be v18+)
+- Clean the Rust build cache: `cd backend && cargo clean`
+- Check versions: `node --version` (v20+), `cargo --version` (1.75+)
 
 ## Contributing
 
