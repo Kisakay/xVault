@@ -210,10 +210,22 @@
   <!-- Barre de navigation mobile -->
   <nav class="bottomnav" aria-label="Primary">
     <md-navigation-bar activeTabIndex={navIndex} onnavigationbaractivated={onNavChanged}>
-      <md-navigation-tab label="Codes" icon="pin"></md-navigation-tab>
-      <md-navigation-tab label="Backup" icon="database"></md-navigation-tab>
-      <md-navigation-tab label="Security" icon="security"></md-navigation-tab>
-      <md-navigation-tab label="Info" icon="info"></md-navigation-tab>
+      <md-navigation-tab label="Codes">
+        <md-icon slot="inactive-icon">pin</md-icon>
+        <md-icon slot="active-icon">pin</md-icon>
+      </md-navigation-tab>
+      <md-navigation-tab label="Backup">
+        <md-icon slot="inactive-icon">database</md-icon>
+        <md-icon slot="active-icon">database</md-icon>
+      </md-navigation-tab>
+      <md-navigation-tab label="Security">
+        <md-icon slot="inactive-icon">security</md-icon>
+        <md-icon slot="active-icon">security</md-icon>
+      </md-navigation-tab>
+      <md-navigation-tab label="Info">
+        <md-icon slot="inactive-icon">info</md-icon>
+        <md-icon slot="active-icon">info</md-icon>
+      </md-navigation-tab>
     </md-navigation-bar>
   </nav>
 
