@@ -52,7 +52,11 @@ to `::1` (IPv6) and breaks IPv4 reverse proxies.
 
 Environment variables (override config.json): `SERVER_HOST`, `SERVER_PORT`,
 `SERVER_URL`, `XVAULT_DB_PATH` (default `./data/xVault.sqlite`),
-`XVAULT_DIST_DIR` (default `./dist`), `XVAULT_CONFIG_PATH` (default `./config.json`).
+`XVAULT_DIST_DIR` (default `./dist`, falls back to `../dist`),
+`XVAULT_CONFIG_PATH` (default `./config.json`).
+
+The binary can be run from the repo root or from `backend/` — the static assets
+directory is resolved relative to the working directory.
 
 ## Usage
 

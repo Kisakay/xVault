@@ -31,16 +31,24 @@ async fn main() {
     };
     println!("Database initialized at {}", db_path.display());
 
+    let dist_dir = config::resolve_dist_dir();
+    if !dist_dir.join("index.html").is_file() {
+        eprintln!(
+            "Warning: no frontend build found at {} (run `npm run build` first)",
+            dist_dir.display()
+        );
+    }
+
     let state = Arc::new(handlers::AppState {
         config: Arc::new(config.clone()),
         db: Arc::new(database),
         sessions: Arc::new(session::SessionStore::default()),
         login_guard: Arc::new(session::LoginGuard::default()),
         config_path,
-        dist_dir: std::env::var("XVAULT_DIST_DIR")
-            .map(std::path::PathBuf::from)
-            .unwrap_or_else(|_| std::path::PathBuf::from("./dist")),
+        dist_dir,
     });
+
+    let dist_display = state.dist_dir.display().to_string();
 
     // Periodic cleanup of expired sessions and failed-login entries.
     {
@@ -71,7 +79,7 @@ async fn main() {
         Ok(addr) => println!("xVault backend listening on http://{addr}"),
         Err(_) => println!("xVault backend listening on http://{address}"),
     }
-    println!("Serving static assets from ./dist");
+    println!("Serving static assets from {dist_display}");
 
     if let Err(err) = axum::serve(listener, app).await {
         eprintln!("Server error: {err}");

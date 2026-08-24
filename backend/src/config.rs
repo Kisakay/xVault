@@ -70,6 +70,21 @@ pub fn resolve_db_path() -> PathBuf {
     PathBuf::from("data").join("xVault.sqlite")
 }
 
+/// Static assets directory: `XVAULT_DIST_DIR` env var wins, then `./dist`
+/// (working directory), then `../dist` (when the binary is run from
+/// `backend/`).
+pub fn resolve_dist_dir() -> PathBuf {
+    if let Ok(path) = env::var("XVAULT_DIST_DIR") {
+        return PathBuf::from(path);
+    }
+    for candidate in [PathBuf::from("dist"), PathBuf::from("../dist")] {
+        if candidate.join("index.html").is_file() {
+            return candidate;
+        }
+    }
+    PathBuf::from("dist")
+}
+
 /// If the target database does not exist yet and a legacy `server/xVault.sqlite`
 /// file is present, copy it so existing vaults survive the migration.
 pub fn migrate_legacy_db(db_path: &Path) {
