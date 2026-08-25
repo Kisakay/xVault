@@ -210,7 +210,10 @@
 
   <!-- Barre de navigation mobile -->
   <nav class="bottomnav" aria-label="Primary">
-    <md-navigation-bar activeTabIndex={navIndex} onnavigationbaractivated={onNavChanged}>
+    <md-navigation-bar
+      activeTabIndex={navIndex}
+      onnavigation-bar-activated={onNavChanged}
+    >
       <md-navigation-tab label="Codes">
         <md-icon slot="inactive-icon">pin</md-icon>
         <md-icon slot="active-icon">pin</md-icon>
