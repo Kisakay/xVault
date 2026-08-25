@@ -1,8 +1,8 @@
 <script lang="ts">
   import { app, signOut, submitUnlock } from '../store.svelte';
+  import NativeField from './NativeField.svelte';
 
   let password = $state('');
-  let showPassword = $state(false);
   let busy = $derived(app.pending.unlock);
 </script>
 
@@ -39,25 +39,14 @@
         void submitUnlock(password);
       }}
     >
-      <md-outlined-text-field
+      <NativeField
         label="Password"
+        type="password"
         name="password"
         id="unlock-password"
-        type={showPassword ? 'text' : 'password'}
         autocomplete="current-password"
-        value={password}
-        oninput={(event: Event) =>
-          (password = (event.target as HTMLInputElement).value)}
-        style="width: 100%"
-      >
-        <md-icon-button
-          slot="trailingicon"
-          aria-label={showPassword ? 'Hide password' : 'Show password'}
-          onclick={() => (showPassword = !showPassword)}
-        >
-          <md-icon>{showPassword ? 'visibility_off' : 'visibility'}</md-icon>
-        </md-icon-button>
-      </md-outlined-text-field>
+        bind:value={password}
+      />
 
       <md-filled-button style="width: 100%" type="submit" disabled={busy}>
         {busy ? 'Decrypting...' : 'Unlock vault'}

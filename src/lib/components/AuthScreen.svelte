@@ -5,19 +5,16 @@
     setAuthMode,
     submitAuth,
   } from '../store.svelte';
+  import NativeField from './NativeField.svelte';
 
   let loginId = $state('');
   let password = $state('');
-  let showPassword = $state(false);
   let busy = $derived(app.pending.auth);
 
   const onTabsChange = (event: Event): void => {
     const target = event.target as HTMLElement & { activeTabIndex: number };
     setAuthMode(target.activeTabIndex === 1 ? 'register' : 'login');
   };
-
-  const setField = (setter: (value: string) => void) => (event: Event) =>
-    setter((event.target as HTMLInputElement).value);
 </script>
 
 <div class="auth-shell">
@@ -84,38 +81,26 @@
         }}
       >
         {#if app.authMode === 'login'}
-          <md-outlined-text-field
+          <NativeField
             label="Login ID"
+            type="email"
             name="loginId"
             id="auth-login-id"
-            type="email"
             autocomplete="username"
             placeholder="e.g. A7cK2xQp"
-            value={loginId}
-            oninput={setField((value) => (loginId = value))}
-            style="width: 100%"
-          ></md-outlined-text-field>
+            bind:value={loginId}
+          />
         {/if}
 
-        <md-outlined-text-field
+        <NativeField
           label={app.authMode === 'register' ? 'Encryption password' : 'Password'}
+          type="password"
           name="password"
           id="auth-password"
-          type={showPassword ? 'text' : 'password'}
           autocomplete={app.authMode === 'register' ? 'new-password' : 'current-password'}
           placeholder={app.authMode === 'register' ? 'At least 8 characters' : 'Enter your password'}
-          value={password}
-          oninput={setField((value) => (password = value))}
-          style="width: 100%"
-        >
-          <md-icon-button
-            slot="trailingicon"
-            aria-label={showPassword ? 'Hide password' : 'Show password'}
-            onclick={() => (showPassword = !showPassword)}
-          >
-            <md-icon>{showPassword ? 'visibility_off' : 'visibility'}</md-icon>
-          </md-icon-button>
-        </md-outlined-text-field>
+          bind:value={password}
+        />
 
         {#if app.authError}
           <div class="notice" role="alert">{app.authError}</div>
