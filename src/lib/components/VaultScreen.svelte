@@ -51,8 +51,9 @@
   });
 
   const onNavChanged = (event: Event): void => {
-    const detail = (event as CustomEvent<{ activeTabIndex: number }>).detail;
-    const panel = panelOrder[detail.activeTabIndex];
+    // L'événement navigation-bar-activated porte `detail.activeIndex`.
+    const detail = (event as CustomEvent<{ activeIndex: number }>).detail;
+    const panel = panelOrder[detail.activeIndex];
     if (panel) {
       app.activePanel = panel;
     }

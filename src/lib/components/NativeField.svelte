@@ -16,7 +16,7 @@
     type?: 'text' | 'email' | 'password';
     name?: string;
     id?: string;
-    autocomplete?: string;
+    autocomplete?: 'username' | 'current-password' | 'new-password';
     placeholder?: string;
     value?: string;
   } = $props();
