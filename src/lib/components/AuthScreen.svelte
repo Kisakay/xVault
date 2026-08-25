@@ -77,6 +77,7 @@
 
       <form
         class="stack-md"
+        novalidate
         onsubmit={(event) => {
           event.preventDefault();
           void submitAuth(loginId, password);
@@ -87,7 +88,7 @@
             label="Login ID"
             name="loginId"
             id="auth-login-id"
-            type="text"
+            type="email"
             autocomplete="username"
             placeholder="e.g. A7cK2xQp"
             value={loginId}
