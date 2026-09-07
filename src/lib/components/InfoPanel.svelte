@@ -20,7 +20,7 @@
   <article class="stat-card md-card">
     <md-icon class="stat-card__icon">keyboard</md-icon>
     <span class="eyebrow">Shortcuts</span>
-    <strong><span class="mono">S · N · L</span></strong>
+    <strong><span class="mono">ALT + S · N · L</span></strong>
     <p class="supporting-text">Search, create, lock.</p>
   </article>
 
